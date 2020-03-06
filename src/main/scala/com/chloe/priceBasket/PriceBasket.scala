@@ -30,7 +30,6 @@ object PriceBasket extends App {
       basket,
       conditionalDiscounts
     )
-
     basket.map(good => applyDiscount(good, allDiscounts))
   }
 
@@ -54,7 +53,9 @@ object PriceBasket extends App {
       BigDecimal(goodsCalculated.map(d => d.discountedPrice).sum)
         .setScale(2, RoundingMode.HALF_EVEN)
 
-    if (goodsCalculated.map(d => d.price).sum == totalWithDiscount) {println("(No offers available)")}
+    if (goodsCalculated.map(d => d.price).sum == totalWithDiscount) {
+      println("(No offers available)")
+    }
 
     println(s"Total price: £$totalWithDiscount")
   }

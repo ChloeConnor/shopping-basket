@@ -8,8 +8,6 @@ import com.chloe.priceBasket.dataTypes.Discount.{
   Discount
 }
 
-import scala.math.BigDecimal.RoundingMode
-
 class TestPriceBasket extends FlatSpec {
 
   "Total price" should "be calculated correctly" in {

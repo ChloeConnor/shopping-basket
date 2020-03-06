@@ -32,10 +32,18 @@ class TestDiscount extends FlatSpec {
     )
 
     val conditionalDiscounts: List[ConditionalDiscount] =
-      List(ConditionalDiscount("Bread", 0.5, Condition(List("Apples", "Apples"))))
-    val actual = applyConditionalDiscount(goodsInBasket, conditionalDiscounts)
+      List(
+        ConditionalDiscount("Bread", 0.5, Condition(List("Apples", "Apples")))
+      )
+    val conditional: List[Discount] =
+      applyConditionalDiscount(goodsInBasket, conditionalDiscounts)
 
-    println(actual)
+    val allDiscounts = conditional ::: applyConditionalDiscount(
+      goodsInBasket,
+      conditionalDiscounts
+    )
+    val actual = goodsInBasket.map(good => applyDiscount(good, allDiscounts))
+
     assert(actual === expectedGoods)
   }
 
@@ -50,8 +58,8 @@ class TestDiscount extends FlatSpec {
     )
 
     val expectedGoods = List(
-      Good("Apple", 1.0, 1.0),
-      Good("Apple", 1.0, 1.0),
+      Good("Apples", 1.0, 1.0),
+      Good("Apples", 1.0, 1.0),
       Good("Bread", 0.8, 0.4),
       Good("pear", 2.0, 1.6),
       Good("banana", 1.8, 1.8),
@@ -62,9 +70,16 @@ class TestDiscount extends FlatSpec {
         ConditionalDiscount("Bread", 0.5, Condition(List("Apples", "Apples"))),
         ConditionalDiscount("pear", 0.2, Condition(List("banana")))
       )
-    val actual = applyConditionalDiscount(goodsInBasket, conditionalDiscounts)
+
+    val conditional: List[Discount] =
+      applyConditionalDiscount(goodsInBasket, conditionalDiscounts)
+
+    val allDiscounts = conditional ::: applyConditionalDiscount(
+      goodsInBasket,
+      conditionalDiscounts
+    )
+    val actual = goodsInBasket.map(good => applyDiscount(good, allDiscounts))
 
     assert(actual === expectedGoods)
   }
-
 }

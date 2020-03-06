@@ -2,23 +2,28 @@ package com.chloe.priceBasket
 
 object PriceBasket extends App {
 
-  val goods = Map("soup" -> 0.65, "bread" -> 0.8, "milk" -> 1.3, "apple" -> 1.0)
-
-  def discount(good: String, percentageOff: Double) = goods(good) * (percentageOff)
-
-  def offer(numberBought: Int, itemBought: String, discountOn: String, discountApplied: Double): Unit = {
-    goods(itemBought)
+  def discount(goodInput: String,
+               goodDiscount: String,
+               percentageOff: Double,
+               goods: Map[String, Double]): Double = {
+    goodInput match {
+      case goodDiscount =>
+        goods(goodDiscount) * (1 - percentageOff)
+      case _ =>
+        goods(goodInput)
+    }
   }
 
-  override def main(args: Array[String]): Unit = {
+  def priceBasket(items: Set[String]): Unit = {
 
-    val totalWithoutDiscount: Double = ???
+    val goods =
+      Map("soup" -> 0.65, "bread" -> 0.8, "milk" -> 1.3, "apple" -> 1.0)
 
-    val discountApples: Double = discount("apple", 0.1)
+    val totalWithoutDiscount: Double = items.map(item => goods(item)).sum
 
-    val discountOffer: Double = ???
-
-    val totalWithDiscountApplied = totalWithoutDiscount - discountApples - discountOffer
-
+    val totalWithDiscount: Double =
+      items.map(item => discount(item, "apple", 0.1, goods)).sum
   }
+
+  override def main(args: Array[String]): Unit = {}
 }

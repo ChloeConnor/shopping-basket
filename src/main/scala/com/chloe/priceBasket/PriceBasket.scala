@@ -1,27 +1,28 @@
 package com.chloe.priceBasket
 
+import com.chloe.priceBasket.UnconditionalDiscount.applyDiscount
+import com.chloe.priceBasket.dataTypes.Discount.{Condition, ConditionalDiscount, Discount}
+import com.chloe.priceBasket.dataTypes.Good
+
 object PriceBasket extends App {
 
-  def discount(goodInput: String,
-               mapOfDiscounts: Map[String, Double],
-               goods: Map[String, Double]): Double =
-    if (mapOfDiscounts.contains(goodInput)) {
-      goods(goodInput) * (1 - mapOfDiscounts(goodInput))
-    } else {
-      goods(goodInput)
-    }
+  val appleDis = Discount("apple", 0.1)
 
-  def priceBasket(items: Set[String]): Unit = {
+  val conditionalDiscounts: Set[ConditionalDiscount] = Set(
+    ConditionalDiscount("Loaf", 0.5, Condition(Set("apple", "apple")))
+  )
+  val unconditionalDiscounts: Set[Discount] = Set(appleDis)
 
-    val goods =
+  def priceBasket(items: Set[String]): Double = {
+
+    val pricesMap =
       Map("soup" -> 0.65, "bread" -> 0.8, "milk" -> 1.3, "apple" -> 1.0)
 
-    val discountsMap = Map("apple" -> 0.1)
+    val basket: Set[Good]  = items.map(item => Good(item, pricesMap(item), pricesMap(item)))
 
-    val totalWithoutDiscount: Double = items.map(item => goods(item)).sum
+    val goodsWithDiscount: Set[Good] = basket.map(good => applyDiscount(good, unconditionalDiscounts))
 
-    val totalWithDiscount: Double =
-      items.map(item => discount(item, discountsMap, goods)).sum
+    goodsWithDiscount.map(d => d.discountedPrice).sum
   }
 
   override def main(args: Array[String]): Unit = {}

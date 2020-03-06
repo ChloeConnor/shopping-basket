@@ -14,14 +14,14 @@ class TestPriceBasket extends FlatSpec {
 
   "Total price" should "be calculated correctly" in {
     val pricesMap =
-      Map("Soup" -> 0.65, "Bread" -> 0.8, "Milk" -> 1.3, "Apple" -> 1.0)
+      Map("Soup" -> 0.65, "Bread" -> 0.8, "Milk" -> 1.3, "Apples" -> 1.0)
 
     val twoSoupDiscountBread: ConditionalDiscount =
       ConditionalDiscount("Bread", 0.5, Condition(List("Soup", "Soup")))
 
-    val discountOnApples: Discount = Discount("Apple", 0.1)
+    val discountOnApples: Discount = Discount("Apples", 0.1)
 
-    val basket = List("Apple", "Milk", "Bread")
+    val basket = List("Apples", "Milk", "Bread")
 
     val goodsCalculated = calculateBasketTotal(
       basket,

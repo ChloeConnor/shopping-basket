@@ -1,6 +1,10 @@
 # shopping-basket
 
 ## How to run:
+in your sbt shell run:
+`run Apples Milk Bread`
+
+or any other combination of the below goods
 
 ## Requirements:
 Write a program driven by unit tests that can price a basket of goods taking into account some special offers.

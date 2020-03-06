@@ -36,12 +36,12 @@ object PriceBasket extends App {
 
   override def main(args: Array[String]): Unit = {
     val pricesMap =
-      Map("Soup" -> 0.65, "Bread" -> 0.8, "Milk" -> 1.3, "Apple" -> 1.0)
+      Map("Soup" -> 0.65, "Bread" -> 0.8, "Milk" -> 1.3, "Apples" -> 1.0)
 
     val twoSoupDiscountBread: ConditionalDiscount =
       ConditionalDiscount("Bread", 0.5, Condition(List("Soup", "Soup")))
 
-    val discountOnApples: Discount = Discount("Apple", 0.1)
+    val discountOnApples: Discount = Discount("Apples", 0.1)
 
     val goodsCalculated = calculateBasketTotal(
       args.toList,
@@ -54,7 +54,7 @@ object PriceBasket extends App {
       BigDecimal(goodsCalculated.map(d => d.discountedPrice).sum)
         .setScale(2, RoundingMode.HALF_EVEN)
 
-    if (goodsCalculated.map(d => d.discountedPrice).sum == totalWithDiscount) {println("(No offers available)")}
+    if (goodsCalculated.map(d => d.price).sum == totalWithDiscount) {println("(No offers available)")}
 
     println(s"Total price: £$totalWithDiscount")
   }

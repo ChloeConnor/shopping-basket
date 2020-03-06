@@ -14,5 +14,5 @@ object Discount {
 
   case class Discount(item: String, discount: Double) extends DiscountGeneric
 
-  case class Condition(goodsRequired: Set[String])
+  case class Condition(goodsRequired: List[String])
 }

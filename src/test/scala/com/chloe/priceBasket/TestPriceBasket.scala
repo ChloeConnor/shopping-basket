@@ -8,8 +8,6 @@ class TestPriceBasket extends FlatSpec {
 
   }
 
-  it should "be calculated with discounts applied" in {
-
-  }
+  it should "be calculated with discounts applied" in {}
 
 }

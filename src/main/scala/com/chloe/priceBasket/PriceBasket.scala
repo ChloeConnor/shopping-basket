@@ -13,10 +13,10 @@ import scala.math.BigDecimal.RoundingMode
 
 object PriceBasket extends App {
 
-  def calculateBasketTotal(items: List[String],
-                           pricesMap: Map[String, Double],
-                           conditionalDiscounts: List[ConditionalDiscount],
-                           discounts: List[Discount]): List[Good] = {
+  def calculateDiscountedGoods(items: List[String],
+                               pricesMap: Map[String, Double],
+                               conditionalDiscounts: List[ConditionalDiscount],
+                               discounts: List[Discount]): List[Good] = {
 
     val basket: List[Good] =
       items.map(item => Good(item, pricesMap(item), pricesMap(item)))
@@ -42,7 +42,7 @@ object PriceBasket extends App {
 
     val discountOnApples: Discount = Discount("Apples", 0.1)
 
-    val goodsCalculated = calculateBasketTotal(
+    val goodsCalculated = calculateDiscountedGoods(
       args.toList,
       pricesMap,
       List(twoSoupDiscountBread),

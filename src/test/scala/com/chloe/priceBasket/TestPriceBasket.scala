@@ -1,7 +1,7 @@
 package com.chloe.priceBasket
 
 import org.scalatest.FlatSpec
-import com.chloe.priceBasket.PriceBasket.calculateBasketTotal
+import com.chloe.priceBasket.PriceBasket.calculateDiscountedGoods
 import com.chloe.priceBasket.dataTypes.Discount.{
   Condition,
   ConditionalDiscount,
@@ -21,7 +21,7 @@ class TestPriceBasket extends FlatSpec {
 
     val basket = List("Apples", "Milk", "Bread")
 
-    val goodsCalculated = calculateBasketTotal(
+    val goodsCalculated = calculateDiscountedGoods(
       basket,
       pricesMap,
       List(twoSoupDiscountBread),

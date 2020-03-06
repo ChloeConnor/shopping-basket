@@ -9,7 +9,9 @@ class TestDiscount extends FlatSpec {
     val goods =
       Map("soup" -> 0.65, "bread" -> 0.8, "milk" -> 1.3, "apple" -> 1.0)
 
-    val actual = discount("apple", "apple", 0.1, goods)
+    val discountsMap = Map("apple" -> 0.1)
+
+    val actual = discount("apple", discountsMap, goods)
     val expected = 0.9
     assert(actual === expected)
   }

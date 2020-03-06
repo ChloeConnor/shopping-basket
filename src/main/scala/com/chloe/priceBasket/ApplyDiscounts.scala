@@ -3,36 +3,48 @@ package com.chloe.priceBasket
 import com.chloe.priceBasket.dataTypes.Discount.{ConditionalDiscount, Discount}
 import com.chloe.priceBasket.dataTypes.Good
 
+import scala.math.BigDecimal.RoundingMode
+
 object ApplyDiscounts {
 
-  def applyDiscount(goodInput: Good, discounts: List[Discount]): Good =
-    Good(
-      goodInput.name,
-      goodInput.price,
-      goodInput.price * (1 - discounts
+  def applyDiscount(goodInput: Good, discounts: List[Discount]): Good = {
+
+    val discountExists = discounts
+      .exists(d => d.item == goodInput.name)
+
+    if (discountExists) {
+      val discount = discounts
         .find(d => d.item == goodInput.name)
-        .getOrElse(Discount("", 0))
-        .discount)
-    )
+        .get
+        .discount
+
+      val newPrice: Double = goodInput.price * (1 - discount)
+      val diff = goodInput.price - newPrice
+      println(
+        goodInput.name + ": " + (discount * 100) + "% off. " + BigDecimal(diff)
+          .setScale(2, RoundingMode.HALF_EVEN) + "p")
+
+      goodInput.copy(discountedPrice = newPrice)
+    } else {
+      goodInput
+    }
+  }
 
   def applyConditionalDiscount(
-    goodsInBasket: List[Good],
-    discounts: List[ConditionalDiscount]
-  ): List[Good] = {
+      goodsInBasket: List[Good],
+      discounts: List[ConditionalDiscount]
+  ): List[Discount] = {
 
     val howManyOfEachGood =
       goodsInBasket.map(g => g.name).groupBy(identity).mapValues(_.size)
 
-    val applicableDiscounts: List[Discount] = discounts.map { d =>
-      val required =
-        d.condition.goodsRequired.groupBy(identity).mapValues(_.size)
-      if (required.toSet.subsetOf(howManyOfEachGood.toSet)) {
-        Discount(d.item, d.discount)
-      } else {
-        Discount(d.item, 0.0)
+    val discountsFiltered = discounts.filter { d =>
+      {
+        val required =
+          d.condition.goodsRequired.groupBy(identity).mapValues(_.size)
+        required.toSet.subsetOf(howManyOfEachGood.toSet)
       }
     }
-
-    goodsInBasket.map(good => applyDiscount(good, applicableDiscounts))
+    discountsFiltered.map(d => Discount(d.item, d.discount))
   }
 }

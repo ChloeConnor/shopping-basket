@@ -40,6 +40,8 @@ object PriceBasket extends App {
   }
 
   override def main(args: Array[String]): Unit = {
+
+
     val pricesMap =
       Map("Soup" -> 0.65, "Bread" -> 0.8, "Milk" -> 1.3, "Apples" -> 1.0)
 

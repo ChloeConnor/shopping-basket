@@ -1,7 +1,11 @@
 package com.chloe.priceBasket
 
 import org.scalatest.FlatSpec
-import com.chloe.priceBasket.PriceBasket.calculateDiscountedGoods
+import com.chloe.priceBasket.PriceBasket.{
+  calculateDiscountedGoods,
+  getTotalWithDiscount,
+  getTotalWithoutDiscount
+}
 import com.chloe.priceBasket.dataTypes.Discount.{
   Condition,
   ConditionalDiscount,
@@ -28,11 +32,11 @@ class TestPriceBasket extends FlatSpec {
       List(discountOnApples)
     )
 
-    val totalWithoutDiscount = goodsCalculated.map(d => d.price).sum
-    val totalWithDiscount = goodsCalculated.map(d => d.discountedPrice).sum
+    val totalWithDiscount = getTotalWithDiscount(goodsCalculated)
+    val totalWithoutDiscount = getTotalWithoutDiscount(goodsCalculated)
 
-    assert(totalWithoutDiscount == (1.0 + 1.3 + 0.8))
-    assert(totalWithDiscount == (0.9 + 1.3 + 0.8))
+    assert(totalWithoutDiscount == 3.10)
+    assert(totalWithDiscount == 3.00)
   }
 
 }

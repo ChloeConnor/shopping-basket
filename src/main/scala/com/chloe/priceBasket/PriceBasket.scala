@@ -8,29 +8,35 @@ import com.chloe.priceBasket.dataTypes.Discount.{
   Discount
 }
 import com.chloe.priceBasket.dataTypes.Good
-
 import scala.math.BigDecimal.RoundingMode
 
 object PriceBasket extends App {
+
+  def getTotalWithoutDiscount(goods: List[Good]) =
+    BigDecimal(goods.map(d => d.price).sum)
+      .setScale(2, RoundingMode.HALF_EVEN)
+
+  def getTotalWithDiscount(goods: List[Good]) =
+    BigDecimal(goods.map(d => d.discountedPrice).sum)
+      .setScale(2, RoundingMode.HALF_EVEN)
 
   def calculateDiscountedGoods(items: List[String],
                                pricesMap: Map[String, Double],
                                conditionalDiscounts: List[ConditionalDiscount],
                                discounts: List[Discount]): List[Good] = {
 
-    val basket: List[Good] =
+    val initialBasket: List[Good] =
       items.map(item => Good(item, pricesMap(item), pricesMap(item)))
 
-    val subtotal = BigDecimal(basket.map(d => d.price).sum)
-      .setScale(2, RoundingMode.HALF_EVEN)
+    val subtotal = getTotalWithoutDiscount(initialBasket)
 
     println(s"Subtotal: £$subtotal")
 
     val allDiscounts = discounts ::: applyConditionalDiscount(
-      basket,
+      initialBasket,
       conditionalDiscounts
     )
-    basket.map(good => applyDiscount(good, allDiscounts))
+    initialBasket.map(good => applyDiscount(good, allDiscounts))
   }
 
   override def main(args: Array[String]): Unit = {
@@ -42,21 +48,18 @@ object PriceBasket extends App {
 
     val discountOnApples: Discount = Discount("Apples", 0.1)
 
-    val goodsCalculated = calculateDiscountedGoods(
+    val basketCalculated = calculateDiscountedGoods(
       args.toList,
       pricesMap,
       List(twoSoupDiscountBread),
       List(discountOnApples)
     )
 
-    val totalWithDiscount =
-      BigDecimal(goodsCalculated.map(d => d.discountedPrice).sum)
-        .setScale(2, RoundingMode.HALF_EVEN)
-
-    if (goodsCalculated.map(d => d.price).sum == totalWithDiscount) {
+    if (getTotalWithDiscount(basketCalculated) == getTotalWithoutDiscount(
+          basketCalculated)) {
       println("(No offers available)")
     }
 
-    println(s"Total price: £$totalWithDiscount")
+    println(s"Total price: £${getTotalWithDiscount(basketCalculated)}")
   }
 }

@@ -5,14 +5,14 @@
 2. from the root directory run 
 `java -cp project/shopping-basket-assembly-0.1.jar com.chloe.priceBasket.PriceBasket [your items here]`
 
-eg
+example:
 `java -cp project/shopping-basket-assembly-0.1.jar com.chloe.priceBasket.PriceBasket Apples`
 
 should return
 
 ```$xslt
 Subtotal: £1.00
-Apples: 10.0% off. 0.10p
+Apples 10.0% off: 10p
 Total price: £0.90
 ```
 

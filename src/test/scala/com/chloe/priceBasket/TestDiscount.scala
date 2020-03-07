@@ -6,6 +6,8 @@ import com.chloe.priceBasket.ApplyDiscounts.applyDiscount
 import com.chloe.priceBasket.ApplyDiscounts.applyConditionalDiscount
 import org.scalatest.FlatSpec
 
+import scala.io.{BufferedSource, Source}
+
 class TestDiscount extends FlatSpec {
 
   "Discounts" should "be applied correctly for unconditional" in {

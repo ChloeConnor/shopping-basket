@@ -20,7 +20,9 @@ object ApplyDiscounts {
       val savings = goodInput.price - newPrice
 
       println(
-        goodInput.name + " " + (discount * 100) + "% off: " + (BigDecimal(savings) * 100)
+        goodInput.name + " " + (discount * 100) + "% off: " + (BigDecimal(
+          savings
+        ) * 100)
           .setScale(0, RoundingMode.HALF_EVEN) + "p"
       )
       goodInput.copy(discountedPrice = newPrice)
@@ -31,8 +33,8 @@ object ApplyDiscounts {
   }
 
   def applyConditionalDiscount(
-      goodsInBasket: List[Good],
-      discounts: List[ConditionalDiscount]
+    goodsInBasket: List[Good],
+    discounts: List[ConditionalDiscount]
   ): List[Discount] = {
 
     val howManyOfEachGood =

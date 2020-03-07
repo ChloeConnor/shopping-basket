@@ -9,6 +9,7 @@ import com.chloe.priceBasket.dataTypes.Discount.{
 }
 import com.chloe.priceBasket.dataTypes.Good
 import scala.math.BigDecimal.RoundingMode
+import com.chloe.priceBasket.utils.ReadFile._
 
 object PriceBasket extends App {
 
@@ -41,24 +42,24 @@ object PriceBasket extends App {
 
   override def main(args: Array[String]): Unit = {
 
-
-    val pricesMap =
-      Map("Soup" -> 0.65, "Bread" -> 0.8, "Milk" -> 1.3, "Apples" -> 1.0)
-
-    val twoSoupDiscountBread: ConditionalDiscount =
-      ConditionalDiscount("Bread", 0.5, Condition(List("Soup", "Soup")))
-
-    val discountOnApples: Discount = Discount("Apples", 0.1)
+    if (args.length == 0) {
+      println("Please specify at least one item")
+    }
+    val pricesMap = readCSVToMap("src/main/resources/prices.csv")
+    val conditionalDiscounts = readCSVToConditionalDiscount(
+      "src/main/resources/conditional_discounts.csv")
+    val discounts = readCSVToDiscount("src/main/resources/discounts.csv")
 
     val basketCalculated = calculateDiscountedGoods(
       args.toList,
       pricesMap,
-      List(twoSoupDiscountBread),
-      List(discountOnApples)
+      conditionalDiscounts,
+      discounts
     )
 
     if (getTotalWithDiscount(basketCalculated) == getTotalWithoutDiscount(
-          basketCalculated)) {
+          basketCalculated
+        )) {
       println("(No offers available)")
     }
 

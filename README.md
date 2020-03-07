@@ -1,8 +1,9 @@
 # shopping-basket
 
 ## How to run:
-in your sbt shell run:
-`run Apples Milk Bread`
+1. clone repo
+2. from the root directory run 
+`java -cp project/shopping-basket-assembly-0.1.jar com.chloe.priceBasket.PriceBasket [your items here]`
 
 or any other combination of the below goods
 

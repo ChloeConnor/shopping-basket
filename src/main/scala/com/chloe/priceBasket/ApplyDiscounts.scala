@@ -9,31 +9,30 @@ object ApplyDiscounts {
 
   def applyDiscount(goodInput: Good, discounts: List[Discount]): Good = {
 
-    val discountExists = discounts
-      .exists(d => d.item == goodInput.name)
+    if (discounts.exists(dis => dis.item == goodInput.name)) {
 
-    if (discountExists) {
       val discount = discounts
         .find(d => d.item == goodInput.name)
         .get
         .discount
 
-      val newPrice: Double = goodInput.price * (1 - discount)
-      val diff = goodInput.price - newPrice
-      println(
-        goodInput.name + ": " + (discount * 100) + "% off. " + BigDecimal(diff)
-          .setScale(2, RoundingMode.HALF_EVEN) + "p"
-      )
+      val newPrice = goodInput.price * (1 - discount)
+      val savings = goodInput.price - newPrice
 
+      println(
+        goodInput.name + ": " + (discount * 100) + "% off. " + (BigDecimal(savings) * 100)
+          .setScale(0, RoundingMode.HALF_EVEN) + "p"
+      )
       goodInput.copy(discountedPrice = newPrice)
+
     } else {
       goodInput
     }
   }
 
   def applyConditionalDiscount(
-    goodsInBasket: List[Good],
-    discounts: List[ConditionalDiscount]
+      goodsInBasket: List[Good],
+      discounts: List[ConditionalDiscount]
   ): List[Discount] = {
 
     val howManyOfEachGood =

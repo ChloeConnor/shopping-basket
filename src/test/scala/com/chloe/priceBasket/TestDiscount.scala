@@ -2,8 +2,8 @@ package com.chloe.priceBasket
 
 import com.chloe.priceBasket.dataTypes.Discount._
 import com.chloe.priceBasket.dataTypes.Good
-import com.chloe.priceBasket.ApplyDiscounts.applyDiscount
-import com.chloe.priceBasket.ApplyDiscounts.applyConditionalDiscount
+import com.chloe.priceBasket.discounts.ApplyDiscounts.applyDiscountToGood
+import com.chloe.priceBasket.discounts.ConditionalDiscounts.convertConditionalDiscountsToDiscounts
 import org.scalatest.FlatSpec
 
 import scala.io.{BufferedSource, Source}
@@ -14,7 +14,7 @@ class TestDiscount extends FlatSpec {
 
     val discounts: List[Discount] = List(Discount("Apples", 0.1))
 
-    val actual = applyDiscount(Good("Apples", 1.0, 1.0), discounts)
+    val actual = applyDiscountToGood(Good("Apples", 1.0, 1.0), discounts)
     val expected = 0.9
     assert(actual.discountedPrice === expected)
   }
@@ -38,13 +38,13 @@ class TestDiscount extends FlatSpec {
         ConditionalDiscount("Bread", 0.5, Condition(List("Apples", "Apples")))
       )
     val conditional: List[Discount] =
-      applyConditionalDiscount(goodsInBasket, conditionalDiscounts)
+      convertConditionalDiscountsToDiscounts(goodsInBasket, conditionalDiscounts)
 
-    val allDiscounts = conditional ::: applyConditionalDiscount(
+    val allDiscounts = conditional ::: convertConditionalDiscountsToDiscounts(
       goodsInBasket,
       conditionalDiscounts
     )
-    val actual = goodsInBasket.map(good => applyDiscount(good, allDiscounts))
+    val actual = goodsInBasket.map(good => applyDiscountToGood(good, allDiscounts))
 
     assert(actual === expectedGoods)
   }
@@ -74,13 +74,13 @@ class TestDiscount extends FlatSpec {
       )
 
     val conditional: List[Discount] =
-      applyConditionalDiscount(goodsInBasket, conditionalDiscounts)
+      convertConditionalDiscountsToDiscounts(goodsInBasket, conditionalDiscounts)
 
-    val allDiscounts = conditional ::: applyConditionalDiscount(
+    val allDiscounts = conditional ::: convertConditionalDiscountsToDiscounts(
       goodsInBasket,
       conditionalDiscounts
     )
-    val actual = goodsInBasket.map(good => applyDiscount(good, allDiscounts))
+    val actual = goodsInBasket.map(good => applyDiscountToGood(good, allDiscounts))
 
     assert(actual === expectedGoods)
   }

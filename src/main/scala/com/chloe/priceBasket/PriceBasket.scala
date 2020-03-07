@@ -1,15 +1,12 @@
 package com.chloe.priceBasket
 
-import com.chloe.priceBasket.ApplyDiscounts.applyDiscount
-import com.chloe.priceBasket.ApplyDiscounts.applyConditionalDiscount
-import com.chloe.priceBasket.dataTypes.Discount.{
-  Condition,
-  ConditionalDiscount,
-  Discount
-}
+import com.chloe.priceBasket.discounts.ApplyDiscounts.applyDiscountToGood
+import com.chloe.priceBasket.discounts.ConditionalDiscounts.convertConditionalDiscountsToDiscounts
+import com.chloe.priceBasket.dataTypes.Discount.{ConditionalDiscount, Discount}
 import com.chloe.priceBasket.dataTypes.Good
-import scala.math.BigDecimal.RoundingMode
 import com.chloe.priceBasket.utils.ReadFile._
+
+import scala.math.BigDecimal.RoundingMode
 
 object PriceBasket extends App {
 
@@ -33,11 +30,11 @@ object PriceBasket extends App {
 
     println(s"Subtotal: £$subtotal")
 
-    val allDiscounts = discounts ::: applyConditionalDiscount(
+    val allDiscounts = discounts ::: convertConditionalDiscountsToDiscounts(
       initialBasket,
       conditionalDiscounts
     )
-    initialBasket.map(good => applyDiscount(good, allDiscounts))
+    initialBasket.map(good => applyDiscountToGood(good, allDiscounts))
   }
 
   override def main(args: Array[String]): Unit = {

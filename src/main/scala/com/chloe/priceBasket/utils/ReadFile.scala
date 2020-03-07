@@ -1,7 +1,6 @@
 package com.chloe.priceBasket.utils
 
 import com.chloe.priceBasket.dataTypes.Discount.{Condition, ConditionalDiscount, Discount}
-
 import scala.io.Source
 
 object ReadFile {

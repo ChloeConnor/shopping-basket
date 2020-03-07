@@ -4,7 +4,6 @@ import com.chloe.priceBasket.dataTypes.Discount.{ConditionalDiscount, Discount}
 import com.chloe.priceBasket.dataTypes.Good
 import com.chloe.priceBasket.discounts.ApplyDiscounts.applyDiscountToGood
 import com.chloe.priceBasket.discounts.ConditionalDiscounts.convertConditionalDiscountsToDiscounts
-
 import scala.math.BigDecimal.RoundingMode
 
 object CalculateDiscountedGoods {
@@ -25,9 +24,7 @@ object CalculateDiscountedGoods {
     val initialBasket: List[Good] =
       items.map(item => Good(item, pricesMap(item), pricesMap(item)))
 
-    val subtotal = getTotalWithoutDiscount(initialBasket)
-
-    println(s"Subtotal: £$subtotal")
+    println(s"Subtotal: £${getTotalWithoutDiscount(initialBasket)}")
 
     val allDiscounts = discounts ::: convertConditionalDiscountsToDiscounts(
       initialBasket,

@@ -1,7 +1,7 @@
 package com.chloe.priceBasket
 
 import org.scalatest.FlatSpec
-import com.chloe.priceBasket.PriceBasket.{
+import com.chloe.priceBasket.discounts.CalculateDiscountedGoods.{
   calculateDiscountedGoods,
   getTotalWithDiscount,
   getTotalWithoutDiscount

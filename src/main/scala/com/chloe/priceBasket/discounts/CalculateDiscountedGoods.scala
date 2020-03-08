@@ -4,7 +4,6 @@ import com.chloe.priceBasket.dataTypes.Discount.{ConditionalDiscount, Discount}
 import com.chloe.priceBasket.dataTypes.Good
 import com.chloe.priceBasket.discounts.ApplyDiscounts._
 import com.chloe.priceBasket.discounts.ConditionalDiscounts.convertConditionalDiscountsToDiscounts
-
 import scala.math.BigDecimal.RoundingMode
 
 object CalculateDiscountedGoods {
@@ -17,14 +16,15 @@ object CalculateDiscountedGoods {
     BigDecimal(goods.map(d => d.discountedPrice).sum)
       .setScale(2, RoundingMode.HALF_EVEN)
 
-  def splitDiscounts(discounts: List[Discount],
-                     mapOfPrices: Map[String, Double],
-                     countOfItems: Map[String, Int]): List[Discount] = {
+  def generateCorrectNumberOfDiscounts(
+      discounts: List[Discount],
+      mapOfPrices: Map[String, Double],
+      countOfItems: Map[String, Int]): List[Discount] = {
 
     val discountsApplyAsManyTimes: List[Discount] =
       discounts.filter(dis => dis.numberOfTimesToApply.isEmpty)
 
-    val maxNumber = discounts
+    val maxNumberToBeApplied = discounts
       .filter(dis => dis.numberOfTimesToApply.isDefined)
       .map(m =>
         if (m.numberOfTimesToApply.getOrElse(0) > countOfItems(m.item)) {
@@ -34,7 +34,7 @@ object CalculateDiscountedGoods {
       })
 
     val discountsApplySetNumberOfTimes = for {
-      dis <- maxNumber
+      dis <- maxNumberToBeApplied
       _ <- 0 until dis.numberOfTimesToApply.getOrElse(0)
       if dis.numberOfTimesToApply.isDefined
     } yield {
@@ -66,7 +66,7 @@ object CalculateDiscountedGoods {
 
     applyDiscountsToGoods(
       initialBasket,
-      splitDiscounts(
+      generateCorrectNumberOfDiscounts(
         allDiscounts,
         pricesMap,
         initialBasket.map(g => g.name).groupBy(identity).mapValues(_.size))

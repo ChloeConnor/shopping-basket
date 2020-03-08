@@ -2,7 +2,6 @@ package com.chloe.priceBasket.discounts
 
 import com.chloe.priceBasket.dataTypes.Discount.Discount
 import com.chloe.priceBasket.dataTypes.Good
-import scala.collection.immutable
 import scala.math.BigDecimal.RoundingMode
 
 object ApplyDiscounts {

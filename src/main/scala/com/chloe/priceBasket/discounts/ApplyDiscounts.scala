@@ -12,7 +12,8 @@ object ApplyDiscounts {
 
     println(
       discount.item + " " + (discount.discount * 100) + "% off: " + (BigDecimal(
-        savings) * 100)
+        savings
+      ) * 100)
         .setScale(0, RoundingMode.HALF_EVEN) + "p"
     )
   }
@@ -27,8 +28,9 @@ object ApplyDiscounts {
       })
 
   def findNumberOfEachItemNotDiscounted(
-      basket: List[Good],
-      discountedGoods: List[Good]): Map[String, Int] =
+    basket: List[Good],
+    discountedGoods: List[Good]
+  ): Map[String, Int] =
     basket
       .groupBy(g => g.name)
       .mapValues(_.size)
@@ -38,7 +40,9 @@ object ApplyDiscounts {
             h._1 -> (h._2 - discountedGoods
               .groupBy(g => g.name)
               .mapValues(_.size)
-              .getOrElse(h._1, 0))))
+              .getOrElse(h._1, 0))
+        )
+      )
       .filter(m => m._2 > 0)
 
   def applyDiscountsToGoods(basket: List[Good],

@@ -14,18 +14,18 @@ object ConditionalDiscounts {
     * discount
     */
   def convertConditionalDiscountsToDiscounts(
-      goodsInBasket: List[Good],
-      discounts: List[ConditionalDiscount]
+    goodsInBasket: List[Good],
+    discounts: List[ConditionalDiscount]
   ): List[Discount] = {
 
     val howManyOfEachGood =
       groupGoodsWithQuantity(goodsInBasket)
 
-    discounts
-      .filter { d =>
+    val dee: List[ConditionalDiscount] = discounts
+      .filter { cd =>
         {
           val required =
-            d.condition.goodsRequired.groupBy(identity).mapValues(_.size)
+            cd.condition.goodsRequired.groupBy(identity).mapValues(_.size)
 
           required
             .filter(
@@ -37,6 +37,12 @@ object ConditionalDiscounts {
             .equals(required)
         }
       }
-      .map(d => Discount(d.item, d.discount, Some(1)))
+
+    dee.map(d => {
+      val numberRequired = d.condition.goodsRequired.size
+      val numberInBasket = howManyOfEachGood(d.condition.goodsRequired.head)
+      Discount(d.item, d.discount, Some(numberInBasket / numberRequired))
+    })
+
   }
 }

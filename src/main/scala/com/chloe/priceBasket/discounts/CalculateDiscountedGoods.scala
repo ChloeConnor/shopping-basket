@@ -18,21 +18,35 @@ object CalculateDiscountedGoods {
       .setScale(2, RoundingMode.HALF_EVEN)
 
   def splitDiscounts(discounts: List[Discount],
-                     mapOfPrices: Map[String, Double]): List[Discount] = {
+                     mapOfPrices: Map[String, Double],
+                     countOfItems: Map[String, Int]): List[Discount] = {
 
     val discountsApplyAsManyTimes: List[Discount] =
       discounts.filter(dis => dis.numberOfTimesToApply.isEmpty)
 
+    val maxNumber = discounts
+      .filter(dis => dis.numberOfTimesToApply.isDefined)
+      .map(m =>
+        if (m.numberOfTimesToApply.getOrElse(0) > countOfItems(m.item)) {
+          m.copy(numberOfTimesToApply = Some(countOfItems(m.item)))
+        } else {
+          m
+      })
+
     val discountsApplySetNumberOfTimes = for {
-      dis <- discounts.filter(dis => dis.numberOfTimesToApply.isDefined)
+      dis <- maxNumber
       _ <- 0 until dis.numberOfTimesToApply.getOrElse(0)
       if dis.numberOfTimesToApply.isDefined
     } yield {
-      logDiscount(dis, mapOfPrices(dis.item))
       Discount(dis.item, dis.discount, dis.numberOfTimesToApply)
     }
 
-    discountsApplyAsManyTimes ::: discountsApplySetNumberOfTimes
+    val allDiscounts = discountsApplyAsManyTimes ::: discountsApplySetNumberOfTimes
+    allDiscounts.foreach(
+      dis => logDiscount(dis, mapOfPrices(dis.item))
+    )
+
+    allDiscounts
   }
 
   def calculateDiscountedGoods(items: List[String],
@@ -50,8 +64,13 @@ object CalculateDiscountedGoods {
       conditionalDiscounts
     )) filter (d => initialBasket.map(g => g.name).contains(d.item))
 
-    applyDiscountsToGoods(initialBasket,
-                          splitDiscounts(allDiscounts, pricesMap))
+    applyDiscountsToGoods(
+      initialBasket,
+      splitDiscounts(
+        allDiscounts,
+        pricesMap,
+        initialBasket.map(g => g.name).groupBy(identity).mapValues(_.size))
+    )
   }
 
 }

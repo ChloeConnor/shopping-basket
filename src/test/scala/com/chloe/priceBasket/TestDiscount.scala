@@ -171,4 +171,30 @@ class TestDiscount extends FlatSpec {
     assert(applyNew.toSet == expectedGoods.toSet)
 
   }
+
+  it should "generate the required number of discounts" in {
+
+    val goodsInBasket = List(
+      Good("Bread", 0.8, 0.8),
+      Good("Bread", 0.8, 0.8),
+      Good("Soup", 1.0, 1.0),
+      Good("Soup", 1.0, 1.0),
+      Good("Soup", 1.0, 1.0),
+      Good("Soup", 1.0, 1.0),
+      Good("Soup", 1.0, 1.0),
+      Good("Soup", 1.0, 1.0),
+      Good("Soup", 1.0, 1.0)
+    )
+
+    val conditionalDiscounts: List[ConditionalDiscount] =
+      List(ConditionalDiscount("Bread", 0.5, Condition(List("Soup", "Soup"))))
+
+    val allDiscounts: List[Discount] =
+      convertConditionalDiscountsToDiscounts(
+        goodsInBasket,
+        conditionalDiscounts
+      )
+
+    assert(allDiscounts.head.numberOfTimesToApply.get == 3)
+  }
 }

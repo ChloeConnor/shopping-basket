@@ -8,12 +8,11 @@ object ConditionalDiscounts {
   private def groupGoodsWithQuantity(goods: List[Good]): Map[String, Int] =
     goods.map(g => g.name).groupBy(identity).mapValues(_.size)
 
-
   /**
-   * Checks whether a conditional discount is applicable
-   * based on items in the basket, and if so converts to a
-   * discount
-   */
+    * Checks whether a conditional discount is applicable
+    * based on items in the basket, and if so converts to a
+    * discount
+    */
   def convertConditionalDiscountsToDiscounts(
       goodsInBasket: List[Good],
       discounts: List[ConditionalDiscount]
@@ -26,7 +25,10 @@ object ConditionalDiscounts {
       {
         val required =
           d.condition.goodsRequired.groupBy(identity).mapValues(_.size)
-        required.toSet.subsetOf(howManyOfEachGood.toSet)
+        howManyOfEachGood
+          .filter(a => required.contains(a._1))
+          .values
+          .head > required.values.head
       }
     }
     discountsFiltered.map(d => Discount(d.item, d.discount))

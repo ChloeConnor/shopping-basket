@@ -1,5 +1,7 @@
 package com.chloe.priceBasket
 
+import java.lang.System
+
 import com.chloe.priceBasket.utils.ReadFile._
 import com.chloe.priceBasket.discounts.CalculateDiscountedGoods._
 
@@ -11,7 +13,8 @@ object PriceBasket extends App {
 
     val pricesMap = readCSVToMap("src/main/resources/prices.csv")
     val conditionalDiscounts = readCSVToConditionalDiscount(
-      "src/main/resources/conditional_discounts.csv")
+      "src/main/resources/conditional_discounts.csv"
+    )
     val discounts = readCSVToDiscount("src/main/resources/discounts.csv")
 
     val basketCalculated = calculateDiscountedGoods(
@@ -22,7 +25,8 @@ object PriceBasket extends App {
     )
 
     if (getTotalWithDiscount(basketCalculated) == getTotalWithoutDiscount(
-          basketCalculated)) println("(No offers available)")
+          basketCalculated
+        )) println("(No offers available)")
 
     println(s"Total price: £${getTotalWithDiscount(basketCalculated)}")
   }

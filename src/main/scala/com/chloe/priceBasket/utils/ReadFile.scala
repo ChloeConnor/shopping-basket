@@ -1,6 +1,10 @@
 package com.chloe.priceBasket.utils
 
-import com.chloe.priceBasket.dataTypes.Discount.{Condition, ConditionalDiscount, Discount}
+import com.chloe.priceBasket.dataTypes.Discount.{
+  Condition,
+  ConditionalDiscount,
+  Discount
+}
 import scala.io.Source
 
 object ReadFile {
@@ -40,7 +44,11 @@ object ReadFile {
     file.getLines
       .map(line => {
         val cols: Array[String] = line.split(",").map(_.trim)
-        ConditionalDiscount(cols(0), cols(1).toDouble, Condition(cols(2).split("/").map(_.trim).toList))
+        ConditionalDiscount(
+          cols(0),
+          cols(1).toDouble,
+          Condition(cols(2).split("/").map(_.trim).toList)
+        )
       })
       .toList
   }

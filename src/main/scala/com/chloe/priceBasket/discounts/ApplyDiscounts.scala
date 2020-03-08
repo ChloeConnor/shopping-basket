@@ -10,9 +10,7 @@ object ApplyDiscounts {
     val savings = good.price - newPrice
 
     println(
-      good.name + " " + (discount * 100) + "% off: " + (BigDecimal(
-        savings
-      ) * 100)
+      good.name + " " + (discount * 100) + "% off: " + (BigDecimal(savings) * 100)
         .setScale(0, RoundingMode.HALF_EVEN) + "p"
     )
   }

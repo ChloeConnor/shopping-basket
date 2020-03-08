@@ -140,6 +140,8 @@ class TestDiscount extends FlatSpec {
         conditionalDiscounts
       )
 
+    println(allDiscounts)
+
     val actual =
       goodsInBasket.map(good => applyDiscountToGood(good, allDiscounts))
 

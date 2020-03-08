@@ -17,6 +17,8 @@ object ApplyDiscounts {
 
   def applyDiscountToGood(goodInput: Good, discounts: List[Discount]): Good = {
 
+    println(discounts)
+
     if (discounts.exists(dis => dis.item == goodInput.name)) {
 
       val discount = discounts

@@ -126,11 +126,13 @@ class TestDiscount extends FlatSpec {
       Good("Apples", 1.0, 1.0),
       Good("Apples", 1.0, 1.0),
       Good("Bread", 0.8, 0.4),
-      Good("Bread", 0.8, 0.8)
+      Good("Bread", 0.8, 0.4)
     )
 
     val conditionalDiscounts: List[ConditionalDiscount] =
-      List(ConditionalDiscount("Bread", 0.5, Condition(List("Apples", "Apples"))))
+      List(
+        ConditionalDiscount("Bread", 0.5, Condition(List("Apples", "Apples")))
+      )
 
     val allDiscounts: List[Discount] =
       convertConditionalDiscountsToDiscounts(

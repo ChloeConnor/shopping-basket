@@ -16,6 +16,10 @@ Apples 10.0% off: 10p
 Total price: £0.90
 ```
 
+## Further considerations:
+
+- Multiple discounts could be applied to the same item 
+
 ## Requirements:
 Write a program driven by unit tests that can price a basket of goods taking into account some special offers.
 <p>

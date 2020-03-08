@@ -14,8 +14,8 @@ object ConditionalDiscounts {
     * discount
     */
   def convertConditionalDiscountsToDiscounts(
-      goodsInBasket: List[Good],
-      discounts: List[ConditionalDiscount]
+    goodsInBasket: List[Good],
+    discounts: List[ConditionalDiscount]
   ): List[Discount] = {
 
     val howManyOfEachGood =
@@ -30,7 +30,8 @@ object ConditionalDiscounts {
           .filter(
             req =>
               req._2 <= howManyOfEachGood
-                .filter(a => required.contains(a._1))(req._1)
+                .filter(a => required.contains(a._1))
+                .getOrElse(req._1, 0)
           )
           .equals(required)
       }

@@ -30,6 +30,8 @@ object CalculateDiscountedGoods {
       initialBasket,
       conditionalDiscounts
     )
+    println(allDiscounts)
+
     initialBasket.map(good => applyDiscountToGood(good, allDiscounts))
   }
 

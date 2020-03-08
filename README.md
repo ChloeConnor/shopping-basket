@@ -16,14 +16,6 @@ Apples 10.0% off: 10p
 Total price: £0.90
 ```
 
-## Further considerations:
-
-- If there are conditional offers that overlap (such as 
-`buy two apples get bread half price` and 
-`buy two apples get milk half price`), both offers would be applied
-
-- Multiple discounts could be applied to the same item 
-
 ## Requirements:
 Write a program driven by unit tests that can price a basket of goods taking into account some special offers.
 <p>

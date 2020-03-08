@@ -25,10 +25,14 @@ object ConditionalDiscounts {
       {
         val required =
           d.condition.goodsRequired.groupBy(identity).mapValues(_.size)
-        howManyOfEachGood
-          .filter(a => required.contains(a._1))
-          .values
-          .head > required.values.head
+
+        required
+          .filter(
+            req =>
+              req._2 <= howManyOfEachGood
+                .filter(a => required.contains(a._1))(req._1)
+          )
+          .equals(required)
       }
     }
     discountsFiltered.map(d => Discount(d.item, d.discount))

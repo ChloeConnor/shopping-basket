@@ -37,13 +37,8 @@ class TestDiscount extends FlatSpec {
       List(
         ConditionalDiscount("Bread", 0.5, Condition(List("Apples", "Apples")))
       )
-    val conditional: List[Discount] =
-      convertConditionalDiscountsToDiscounts(
-        goodsInBasket,
-        conditionalDiscounts
-      )
 
-    val allDiscounts = conditional ::: convertConditionalDiscountsToDiscounts(
+    val allDiscounts = convertConditionalDiscountsToDiscounts(
       goodsInBasket,
       conditionalDiscounts
     )
@@ -77,13 +72,7 @@ class TestDiscount extends FlatSpec {
         ConditionalDiscount("pear", 0.2, Condition(List("banana")))
       )
 
-    val conditional: List[Discount] =
-      convertConditionalDiscountsToDiscounts(
-        goodsInBasket,
-        conditionalDiscounts
-      )
-
-    val allDiscounts = conditional ::: convertConditionalDiscountsToDiscounts(
+    val allDiscounts = convertConditionalDiscountsToDiscounts(
       goodsInBasket,
       conditionalDiscounts
     )
@@ -92,4 +81,67 @@ class TestDiscount extends FlatSpec {
 
     assert(actual === expectedGoods)
   }
+
+  it should "be applied when multiple different goods are required" in {
+
+    val goodsInBasket = List(
+      Good("Apples", 1.0, 1.0),
+      Good("Soup", 1.0, 1.0),
+      Good("Soup", 1.0, 1.0),
+      Good("Bread", 0.8, 0.8)
+    )
+
+    val expectedGoods = List(
+      Good("Apples", 1.0, 1.0),
+      Good("Soup", 1.0, 1.0),
+      Good("Soup", 1.0, 1.0),
+      Good("Bread", 0.8, 0.4)
+    )
+
+    val conditionalDiscounts: List[ConditionalDiscount] =
+      List(ConditionalDiscount("Bread", 0.5, Condition(List("Apples", "Soup"))))
+
+    val allDiscounts: List[Discount] =
+      convertConditionalDiscountsToDiscounts(
+        goodsInBasket,
+        conditionalDiscounts
+      )
+
+    val actual =
+      goodsInBasket.map(good => applyDiscountToGood(good, allDiscounts))
+
+    assert(actual === expectedGoods)
+  }
+
+  it should "only apply conditional discount to item once" in {
+
+    val goodsInBasket = List(
+      Good("Apples", 1.0, 1.0),
+      Good("Apples", 1.0, 1.0),
+      Good("Bread", 0.8, 0.8),
+      Good("Bread", 0.8, 0.8)
+    )
+
+    val expectedGoods = List(
+      Good("Apples", 1.0, 1.0),
+      Good("Apples", 1.0, 1.0),
+      Good("Bread", 0.8, 0.4),
+      Good("Bread", 0.8, 0.8)
+    )
+
+    val conditionalDiscounts: List[ConditionalDiscount] =
+      List(ConditionalDiscount("Bread", 0.5, Condition(List("Apples", "Apples"))))
+
+    val allDiscounts: List[Discount] =
+      convertConditionalDiscountsToDiscounts(
+        goodsInBasket,
+        conditionalDiscounts
+      )
+
+    val actual =
+      goodsInBasket.map(good => applyDiscountToGood(good, allDiscounts))
+
+    assert(actual === expectedGoods)
+  }
+
 }

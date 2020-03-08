@@ -51,3 +51,8 @@ Subtotal: £1.30
 (No offers available)
 Total price: £1.30
 ```
+
+## Further considerations:
+
+- if there is more than one conditional offer on the same item, the best offer won't necessarily be picked
+- if there are two unconditional discounts on the same item both will be applied (but this case seems unlikely)

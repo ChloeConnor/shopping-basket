@@ -83,7 +83,7 @@ class TestDiscount extends FlatSpec {
     assert(actual.size == expectedGoods.size)
   }
 
-  it should "be applied when multiple different goods are required" in {
+  it should "be applied when multiple different goods are required for discount to apply" in {
 
     val goodsInBasket = List(
       Good("Apples", 1.0, 1.0),

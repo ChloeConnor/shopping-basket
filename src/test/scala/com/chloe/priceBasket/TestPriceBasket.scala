@@ -1,17 +1,16 @@
 package com.chloe.priceBasket
 
-import org.scalatest.FlatSpec
-import com.chloe.priceBasket.discounts.CalculateDiscountedGoods.{
-  calculateDiscountedGoods,
-  getTotalWithDiscount,
-  getTotalWithoutDiscount,
-  splitDiscounts
-}
 import com.chloe.priceBasket.dataTypes.Discount.{
   Condition,
   ConditionalDiscount,
   Discount
 }
+import com.chloe.priceBasket.discounts.CalculateDiscountedGoods.{
+  calculateDiscountedGoods,
+  getTotalWithDiscount,
+  getTotalWithoutDiscount
+}
+import org.scalatest.FlatSpec
 
 class TestPriceBasket extends FlatSpec {
 

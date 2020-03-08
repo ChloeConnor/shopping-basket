@@ -6,33 +6,47 @@ import scala.math.BigDecimal.RoundingMode
 
 object ApplyDiscounts {
 
-  def logDiscount(discount: Double, good: Good, newPrice: Double): Unit = {
-    val savings = good.price - newPrice
+  def logDiscount(discount: Discount, oldPrice: Double): Unit = {
+    val savings = oldPrice - (oldPrice * (1 - discount.discount))
 
     println(
-      good.name + " " + (discount * 100) + "% off: " + (BigDecimal(savings) * 100)
+      discount.item + " " + (discount.discount * 100) + "% off: " + (BigDecimal(
+        savings) * 100)
         .setScale(0, RoundingMode.HALF_EVEN) + "p"
     )
   }
 
-  def applyDiscountToGood(goodInput: Good, discounts: List[Discount]): Good = {
+  def applyDiscountsToGoods(basket: List[Good],
+                            discounts: List[Discount]): List[Good] = {
 
-    if (discounts.exists(dis => dis.item == goodInput.name)) {
+    val discountedGoods = discounts
+      .filter(d => basket.map(g => g.name).contains(d.item))
+      .map(dis => {
+        val priceGood = basket.find(b => b.name == dis.item).get.price
+        Good(dis.item, priceGood, priceGood * (1 - dis.discount))
+      })
 
-      val discount = discounts
-        .find(d => d.item == goodInput.name)
-        .get
-        .discount
+    val countInBasket = basket.groupBy(g => g.name).mapValues(_.size)
 
-      val newPrice = goodInput.price * (1 - discount)
+    val countOfDiscounts =
+      discountedGoods.groupBy(g => g.name).mapValues(_.size)
 
-      logDiscount(discount, goodInput, newPrice)
+    val itemsNotDiscounted: Map[String, Int] =
+      countInBasket
+        .flatMap(h => Map(h._1 -> (h._2 - countOfDiscounts.getOrElse(h._1, 0))))
+        .filter(m => m._2 > 0)
 
-      goodInput.copy(discountedPrice = newPrice)
+    var some: List[Good] = List.empty[Good]
 
-    } else {
-      goodInput
-    }
+    itemsNotDiscounted.foreach(m => {
+      val priceGood = basket.find(b => b.name == m._1).get.price
+
+      for (_ <- 0 until m._2) {
+        some = some ::: List(Good(m._1, priceGood, priceGood))
+      }
+    })
+
+    discountedGoods ::: some
   }
 
 }

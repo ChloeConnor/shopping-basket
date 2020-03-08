@@ -4,7 +4,8 @@ import org.scalatest.FlatSpec
 import com.chloe.priceBasket.discounts.CalculateDiscountedGoods.{
   calculateDiscountedGoods,
   getTotalWithDiscount,
-  getTotalWithoutDiscount
+  getTotalWithoutDiscount,
+  splitDiscounts
 }
 import com.chloe.priceBasket.dataTypes.Discount.{
   Condition,

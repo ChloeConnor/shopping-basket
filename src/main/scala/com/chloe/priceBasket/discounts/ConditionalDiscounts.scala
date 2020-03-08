@@ -37,6 +37,6 @@ object ConditionalDiscounts {
             .equals(required)
         }
       }
-      .map(d => Discount(d.item, d.discount))
+      .map(d => Discount(d.item, d.discount, Some(1)))
   }
 }

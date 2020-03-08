@@ -18,7 +18,7 @@ Total price: £0.90
 
 ## Further considerations:
 
-- Multiple discounts could be applied to the same item 
+- Multiple discounts could be applied to the same item, if there were say two discounts on apples
 
 ## Requirements:
 Write a program driven by unit tests that can price a basket of goods taking into account some special offers.

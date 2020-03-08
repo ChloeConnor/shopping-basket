@@ -2,11 +2,9 @@ package com.chloe.priceBasket
 
 import com.chloe.priceBasket.dataTypes.Discount._
 import com.chloe.priceBasket.dataTypes.Good
-import com.chloe.priceBasket.discounts.ApplyDiscounts.applyDiscountToGood
+import com.chloe.priceBasket.discounts.ApplyDiscounts._
 import com.chloe.priceBasket.discounts.ConditionalDiscounts.convertConditionalDiscountsToDiscounts
 import org.scalatest.FlatSpec
-
-import scala.io.{BufferedSource, Source}
 
 class TestDiscount extends FlatSpec {
 
@@ -14,9 +12,10 @@ class TestDiscount extends FlatSpec {
 
     val discounts: List[Discount] = List(Discount("Apples", 0.1))
 
-    val actual = applyDiscountToGood(Good("Apples", 1.0, 1.0), discounts)
+    val actual =
+      applyDiscountsToGoods(List(Good("Apples", 1.0, 1.0)), discounts)
     val expected = 0.9
-    assert(actual.discountedPrice === expected)
+    assert(actual.head.discountedPrice === expected)
   }
 
   it should "be applied when conditional" in {
@@ -43,9 +42,10 @@ class TestDiscount extends FlatSpec {
       conditionalDiscounts
     )
     val actual =
-      goodsInBasket.map(good => applyDiscountToGood(good, allDiscounts))
+      applyDiscountsToGoods(goodsInBasket, allDiscounts)
 
-    assert(actual === expectedGoods)
+    assert(actual.toSet === expectedGoods.toSet)
+    assert(actual.size == expectedGoods.size)
   }
 
   it should "be applied when multiple conditional discounts" in {
@@ -77,9 +77,10 @@ class TestDiscount extends FlatSpec {
       conditionalDiscounts
     )
     val actual =
-      goodsInBasket.map(good => applyDiscountToGood(good, allDiscounts))
+      applyDiscountsToGoods(goodsInBasket, allDiscounts)
 
-    assert(actual === expectedGoods)
+    assert(actual.toSet === expectedGoods.toSet)
+    assert(actual.size == expectedGoods.size)
   }
 
   it should "be applied when multiple different goods are required" in {
@@ -108,9 +109,10 @@ class TestDiscount extends FlatSpec {
       )
 
     val actual =
-      goodsInBasket.map(good => applyDiscountToGood(good, allDiscounts))
+      applyDiscountsToGoods(goodsInBasket, allDiscounts)
 
-    assert(actual === expectedGoods)
+    assert(actual.toSet === expectedGoods.toSet)
+    assert(actual.size == expectedGoods.size)
   }
 
   it should "only apply conditional discount to item once" in {
@@ -125,7 +127,7 @@ class TestDiscount extends FlatSpec {
     val expectedGoods = List(
       Good("Apples", 1.0, 1.0),
       Good("Apples", 1.0, 1.0),
-      Good("Bread", 0.8, 0.4),
+      Good("Bread", 0.8, 0.8),
       Good("Bread", 0.8, 0.4)
     )
 
@@ -140,12 +142,33 @@ class TestDiscount extends FlatSpec {
         conditionalDiscounts
       )
 
-    println(allDiscounts)
+    val applyNew = applyDiscountsToGoods(goodsInBasket, allDiscounts)
 
-    val actual =
-      goodsInBasket.map(good => applyDiscountToGood(good, allDiscounts))
+    assert(expectedGoods.intersect(applyNew).size == 4)
+    assert(applyNew.toSet == expectedGoods.toSet)
 
-    assert(actual === expectedGoods)
   }
 
+  it should "calculate normal price if no discounts applicable" in {
+
+    val goodsInBasket = List(Good("Soup", 1.0, 1.0), Good("Apples", 1.0, 1.0))
+
+    val expectedGoods = List(Good("Soup", 1.0, 1.0), Good("Apples", 1.0, 1.0))
+
+    val conditionalDiscounts: List[ConditionalDiscount] =
+      List(
+        ConditionalDiscount("Bread", 0.5, Condition(List("Apples", "Apples")))
+      )
+
+    val allDiscounts: List[Discount] =
+      convertConditionalDiscountsToDiscounts(
+        goodsInBasket,
+        conditionalDiscounts
+      )
+
+    val applyNew = applyDiscountsToGoods(goodsInBasket, allDiscounts)
+
+    assert(applyNew.toSet == expectedGoods.toSet)
+
+  }
 }

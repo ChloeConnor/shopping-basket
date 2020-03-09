@@ -8,16 +8,6 @@ import org.scalatest.FlatSpec
 
 class TestDiscount extends FlatSpec {
 
-  "Discounts" should "be applied correctly for unconditional" in {
-
-    val discounts: List[Discount] = List(Discount("Apples", 0.1))
-
-    val actual =
-      applyDiscountsToGoods(List(Good("Apples", 1.0, 1.0)), discounts)
-    val expected = 0.9
-    assert(actual.head.discountedPrice === expected)
-  }
-
   it should "be applied when conditional" in {
 
     val goodsInBasket = List(

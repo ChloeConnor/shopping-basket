@@ -16,10 +16,20 @@ object CalculateDiscountedGoods {
     BigDecimal(goods.map(d => d.discountedPrice).sum)
       .setScale(2, RoundingMode.HALF_EVEN)
 
+  def discountsGenerate(discountsFiltered: List[Discount],
+                        countOfItems: Map[String, Int]): List[Discount] =
+    for {
+      dis <- discountsFiltered
+      _ <- 0 until countOfItems(dis.item)
+    } yield {
+      Discount(dis.item, dis.discount, dis.numberOfTimesToApply)
+    }
+
   def generateCorrectNumberOfDiscounts(
-      discounts: List[Discount],
-      mapOfPrices: Map[String, Double],
-      countOfItems: Map[String, Int]): List[Discount] = {
+    discounts: List[Discount],
+    mapOfPrices: Map[String, Double],
+    countOfItems: Map[String, Int]
+  ): List[Discount] = {
 
     val discountsApplyAsManyTimes = for {
       dis <- discounts.filter(dis => dis.numberOfTimesToApply.isEmpty)
@@ -28,27 +38,28 @@ object CalculateDiscountedGoods {
       Discount(dis.item, dis.discount, dis.numberOfTimesToApply)
     }
 
-    val maxNumberToBeApplied = discounts
+    val maxNumberToBeApplied: List[Discount] = discounts
       .filter(dis => dis.numberOfTimesToApply.isDefined)
-      .map(m =>
-        if (m.numberOfTimesToApply.getOrElse(0) > countOfItems(m.item)) {
-          m.copy(numberOfTimesToApply = Some(countOfItems(m.item)))
-        } else {
-          m
-      })
+      .map(
+        m =>
+          if (m.numberOfTimesToApply.getOrElse(0) > countOfItems(m.item)) {
+            m.copy(numberOfTimesToApply = Some(countOfItems(m.item)))
+          } else {
+            m
+        }
+      )
 
     val discountsApplySetNumberOfTimes = for {
-      dis <- maxNumberToBeApplied
+      dis <- maxNumberToBeApplied.filter(
+        dis => dis.numberOfTimesToApply.isDefined
+      )
       _ <- 0 until dis.numberOfTimesToApply.getOrElse(0)
-      if dis.numberOfTimesToApply.isDefined
     } yield {
       Discount(dis.item, dis.discount, dis.numberOfTimesToApply)
     }
 
     val allDiscounts = discountsApplyAsManyTimes ::: discountsApplySetNumberOfTimes
-    allDiscounts.foreach(
-      dis => logDiscount(dis, mapOfPrices(dis.item))
-    )
+    allDiscounts.foreach(dis => logDiscount(dis, mapOfPrices(dis.item)))
 
     allDiscounts
   }
@@ -73,7 +84,8 @@ object CalculateDiscountedGoods {
       generateCorrectNumberOfDiscounts(
         allDiscounts,
         pricesMap,
-        initialBasket.map(g => g.name).groupBy(identity).mapValues(_.size))
+        initialBasket.map(g => g.name).groupBy(identity).mapValues(_.size)
+      )
     )
   }
 

@@ -18,31 +18,34 @@ object ApplyDiscounts {
   }
 
   def applyAllDiscounts(basket: List[Good],
-                        discounts: List[Discount]): List[Good] =
+                        discounts: List[Discount]): List[Good] = {
     discounts
       .filter(d => basket.map(g => g.name).contains(d.item))
       .map(dis => {
-        val priceGood = basket.find(b => b.name == dis.item).get.price
+        val priceGood = basket
+          .find(b => { b.name == dis.item && b.price == b.discountedPrice })
+          .get
+          .price
         Good(dis.item, priceGood, priceGood * (1 - dis.discount))
       })
+  }
 
   def findNumberOfEachItemNotDiscounted(
     basket: List[Good],
     discountedGoods: List[Good]
-  ): Map[String, Int] =
+  ): Map[String, Int] = {
+    def howMany(item: String) =
+      discountedGoods
+        .groupBy(g => g.name)
+        .mapValues(_.size)
+        .getOrElse(item, 0)
+
     basket
       .groupBy(g => g.name)
       .mapValues(_.size)
-      .flatMap(
-        h =>
-          Map(
-            h._1 -> (h._2 - discountedGoods
-              .groupBy(g => g.name)
-              .mapValues(_.size)
-              .getOrElse(h._1, 0))
-        )
-      )
+      .flatMap(h => Map(h._1 -> (h._2 - howMany(h._1))))
       .filter(m => m._2 > 0)
+  }
 
   def applyDiscountsToGoods(basket: List[Good],
                             discounts: List[Discount]): List[Good] = {

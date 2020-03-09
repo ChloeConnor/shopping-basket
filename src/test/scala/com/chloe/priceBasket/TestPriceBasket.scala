@@ -61,8 +61,29 @@ class TestPriceBasket extends FlatSpec {
     println(totalWithDiscount)
     println(totalWithoutDiscount)
 
-    assert(totalWithoutDiscount == 5.60)
+    assert(totalWithoutDiscount == 3.80)
     assert(totalWithDiscount == 4.80)
+  }
+
+  "Total price" should "be calculated when multiple items with uncondiional discount" in {
+    val pricesMap =
+      Map("Apples" -> 1.0, "Bread" -> 0.8)
+
+    val basket = List("Apples", "Apples", "Apples", "Bread")
+
+    val discounts: List[Discount] = List(Discount("Apples", 0.1))
+
+    val goodsCalculated =
+      calculateDiscountedGoods(basket, pricesMap, List.empty, discounts)
+
+    val totalWithDiscount = getTotalWithDiscount(goodsCalculated)
+    val totalWithoutDiscount = getTotalWithoutDiscount(goodsCalculated)
+
+    println(totalWithDiscount)
+    println(totalWithoutDiscount)
+
+    assert(totalWithoutDiscount == 3.80)
+    assert(totalWithDiscount == 3.50)
   }
 
 }

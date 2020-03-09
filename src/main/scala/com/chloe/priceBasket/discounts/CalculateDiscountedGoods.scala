@@ -25,22 +25,26 @@ object CalculateDiscountedGoods {
       Discount(dis.item, dis.discount, dis.numberOfTimesToApply)
     }
 
-  def generateCorrectNumberOfDiscounts(
-      discounts: List[Discount],
-      mapOfPrices: Map[String, Double],
-      countOfItems: Map[String, Int]
-  ): List[Discount] = {
-
-    val maxNumberToBeApplied: List[Discount] = discounts
+  def getMaxNumberOfDiscounts(discounts: List[Discount],
+                              countOfItems: Map[String, Int]): List[Discount] =
+    discounts
       .map(
         discount =>
           if (discount.numberOfTimesToApply > countOfItems(discount.item)) {
-            discount.copy(
-              numberOfTimesToApply = countOfItems(discount.item))
+            discount.copy(numberOfTimesToApply = countOfItems(discount.item))
           } else {
             discount
         }
       )
+
+  def generateCorrectNumberOfDiscounts(
+    discounts: List[Discount],
+    mapOfPrices: Map[String, Double],
+    countOfItems: Map[String, Int]
+  ): List[Discount] = {
+
+    val maxNumberToBeApplied: List[Discount] =
+      getMaxNumberOfDiscounts(discounts, countOfItems)
 
     val allDiscounts = for {
       dis <- maxNumberToBeApplied
@@ -65,7 +69,7 @@ object CalculateDiscountedGoods {
       conditionalDiscounts
     )) filter (d => initialBasket.map(g => g.name).contains(d.item))
 
-    applyDiscountsToGoods(
+    applyDiscountsAndCombineWithNonDiscounts(
       initialBasket,
       generateCorrectNumberOfDiscounts(
         allDiscounts,

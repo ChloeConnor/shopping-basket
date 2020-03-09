@@ -72,7 +72,12 @@ class TestPriceBasket extends FlatSpec {
     val discounts: List[Discount] = List(Discount("Apples", 0.1, 3))
 
     val goodsCalculated =
-      calculateDiscountedGoods(createBasket(basket, pricesMap), pricesMap, List.empty, discounts)
+      calculateDiscountedGoods(
+        createBasket(basket, pricesMap),
+        pricesMap,
+        List.empty,
+        discounts
+      )
 
     val totalWithDiscount = getTotalWithDiscount(goodsCalculated)
     val totalWithoutDiscount = getTotalWithoutDiscount(goodsCalculated)

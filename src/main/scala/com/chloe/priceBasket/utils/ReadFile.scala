@@ -23,7 +23,8 @@ object ReadFile {
       .reduce(_ ++ _)
   }
 
-  def readCSVToDiscount(path: String, countOfItems: Map[String, Int]): List[Discount] = {
+  def readCSVToDiscount(path: String,
+                        countOfItems: Map[String, Int]): List[Discount] = {
     val file =
       Source
         .fromFile(path)

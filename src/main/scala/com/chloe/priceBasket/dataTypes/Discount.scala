@@ -12,9 +12,7 @@ object Discount {
                                  condition: Condition)
       extends DiscountGeneric
 
-  case class Discount(item: String,
-                      discount: Double,
-                      numberOfTimesToApply: Int)
+  case class Discount(item: String, discount: Double, numberOfTimesToApply: Int)
       extends DiscountGeneric
 
   case class Condition(goodsRequired: List[String])

@@ -32,7 +32,7 @@ class TestDiscount extends FlatSpec {
       conditionalDiscounts
     )
     val actual =
-      applyDiscountsToGoods(goodsInBasket, allDiscounts)
+      applyDiscountsAndCombineWithNonDiscounts(goodsInBasket, allDiscounts)
 
     assert(actual.toSet === expectedGoods.toSet)
     assert(actual.size == expectedGoods.size)
@@ -67,7 +67,7 @@ class TestDiscount extends FlatSpec {
       conditionalDiscounts
     )
     val actual =
-      applyDiscountsToGoods(goodsInBasket, allDiscounts)
+      applyDiscountsAndCombineWithNonDiscounts(goodsInBasket, allDiscounts)
 
     assert(actual.toSet === expectedGoods.toSet)
     assert(actual.size == expectedGoods.size)
@@ -99,7 +99,7 @@ class TestDiscount extends FlatSpec {
       )
 
     val actual =
-      applyDiscountsToGoods(goodsInBasket, allDiscounts)
+      applyDiscountsAndCombineWithNonDiscounts(goodsInBasket, allDiscounts)
 
     assert(actual.toSet === expectedGoods.toSet)
     assert(actual.size == expectedGoods.size)
@@ -132,7 +132,8 @@ class TestDiscount extends FlatSpec {
         conditionalDiscounts
       )
 
-    val applyNew = applyDiscountsToGoods(goodsInBasket, allDiscounts)
+    val applyNew =
+      applyDiscountsAndCombineWithNonDiscounts(goodsInBasket, allDiscounts)
 
     assert(expectedGoods.intersect(applyNew).size == 4)
     assert(applyNew.toSet == expectedGoods.toSet)
@@ -156,7 +157,8 @@ class TestDiscount extends FlatSpec {
         conditionalDiscounts
       )
 
-    val applyNew = applyDiscountsToGoods(goodsInBasket, allDiscounts)
+    val applyNew =
+      applyDiscountsAndCombineWithNonDiscounts(goodsInBasket, allDiscounts)
 
     assert(applyNew.toSet == expectedGoods.toSet)
 

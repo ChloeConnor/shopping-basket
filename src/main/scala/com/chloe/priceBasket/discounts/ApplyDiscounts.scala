@@ -32,8 +32,8 @@ object ApplyDiscounts {
   }
 
   def findNumberOfEachItemNotDiscounted(
-      basket: List[Good],
-      discountedGoods: List[Good]
+    basket: List[Good],
+    discountedGoods: List[Good]
   ): Map[String, Int] = {
 
     def howMany(item: String) =
@@ -44,10 +44,13 @@ object ApplyDiscounts {
       .filter(m => m._2 > 0)
   }
 
-  def applyDiscountsToGoods(basket: List[Good],
-                            discounts: List[Discount]): List[Good] = {
+  def applyDiscountsAndCombineWithNonDiscounts(
+    basket: List[Good],
+    discounts: List[Discount]
+  ): List[Good] = {
 
     val discountedGoods = applyAllDiscounts(basket, discounts)
+    println(discountedGoods)
 
     val itemsNotDiscounted: Map[String, Int] =
       findNumberOfEachItemNotDiscounted(basket, discountedGoods)

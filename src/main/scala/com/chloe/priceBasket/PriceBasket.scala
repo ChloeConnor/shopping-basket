@@ -24,7 +24,8 @@ object PriceBasket extends App {
     )
 
     val countOfItems = countItemsInBasket(basket)
-    val discounts = readCSVToDiscount("src/main/resources/discounts.csv", countOfItems)
+    val discounts =
+      readCSVToDiscount("src/main/resources/discounts.csv", countOfItems)
 
     val basketCalculated = calculateDiscountedGoods(
       basket,

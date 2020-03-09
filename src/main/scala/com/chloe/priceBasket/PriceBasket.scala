@@ -13,11 +13,11 @@ object PriceBasket extends App {
   def countItemsInBasket(basket: List[Good]): Map[String, Int] =
     basket.map(g => g.name).groupBy(identity).mapValues(_.size)
 
-
-  def logNoOffers(basket: List[Good]) = if (getTotal(basket, discounted = false) == getTotal(
-    basket,
-    discounted = true
-  )) println("(No offers available)")
+  def logNoOffers(basket: List[Good]): Unit =
+    if (getTotal(basket, discounted = false) == getTotal(
+          basket,
+          discounted = true
+        )) println("(No offers available)")
 
   override def main(args: Array[String]): Unit = {
 

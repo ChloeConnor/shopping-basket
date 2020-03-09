@@ -21,8 +21,12 @@ object CalculateDiscountedGoods {
       mapOfPrices: Map[String, Double],
       countOfItems: Map[String, Int]): List[Discount] = {
 
-    val discountsApplyAsManyTimes: List[Discount] =
-      discounts.filter(dis => dis.numberOfTimesToApply.isEmpty)
+    val discountsApplyAsManyTimes = for {
+      dis <- discounts.filter(dis => dis.numberOfTimesToApply.isEmpty)
+      _ <- 0 until countOfItems(dis.item)
+    } yield {
+      Discount(dis.item, dis.discount, dis.numberOfTimesToApply)
+    }
 
     val maxNumberToBeApplied = discounts
       .filter(dis => dis.numberOfTimesToApply.isDefined)

@@ -34,10 +34,11 @@ object PriceBasket extends App {
       discounts
     )
 
-    if (getTotalWithDiscount(basketCalculated) == getTotalWithoutDiscount(
-          basketCalculated
+    if (getTotal(basketCalculated, discounted = false) == getTotal(
+          basketCalculated,
+          discounted = true
         )) println("(No offers available)")
 
-    println(s"Total price: £${getTotalWithDiscount(basketCalculated)}")
+    println(s"Total price: £${getTotal(basketCalculated, discounted = true)}")
   }
 }

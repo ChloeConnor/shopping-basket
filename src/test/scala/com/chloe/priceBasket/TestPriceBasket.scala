@@ -7,8 +7,7 @@ import com.chloe.priceBasket.dataTypes.Discount.{
 }
 import com.chloe.priceBasket.discounts.CalculateDiscountedGoods.{
   calculateDiscountedGoods,
-  getTotalWithDiscount,
-  getTotalWithoutDiscount
+  getTotal
 }
 import com.chloe.priceBasket.PriceBasket._
 import org.scalatest.FlatSpec
@@ -33,8 +32,8 @@ class TestPriceBasket extends FlatSpec {
       List(discountOnApples)
     )
 
-    val totalWithDiscount = getTotalWithDiscount(goodsCalculated)
-    val totalWithoutDiscount = getTotalWithoutDiscount(goodsCalculated)
+    val totalWithDiscount = getTotal(goodsCalculated, discounted = true)
+    val totalWithoutDiscount = getTotal(goodsCalculated, discounted = false)
 
     assert(totalWithoutDiscount == 3.10)
     assert(totalWithDiscount == 3.00)
@@ -56,8 +55,8 @@ class TestPriceBasket extends FlatSpec {
       List.empty
     )
 
-    val totalWithDiscount = getTotalWithDiscount(goodsCalculated)
-    val totalWithoutDiscount = getTotalWithoutDiscount(goodsCalculated)
+    val totalWithDiscount = getTotal(goodsCalculated, discounted = true)
+    val totalWithoutDiscount = getTotal(goodsCalculated, discounted = false)
 
     assert(totalWithoutDiscount == 5.60)
     assert(totalWithDiscount == 4.80)
@@ -79,8 +78,8 @@ class TestPriceBasket extends FlatSpec {
         discounts
       )
 
-    val totalWithDiscount = getTotalWithDiscount(goodsCalculated)
-    val totalWithoutDiscount = getTotalWithoutDiscount(goodsCalculated)
+    val totalWithDiscount = getTotal(goodsCalculated, discounted = true)
+    val totalWithoutDiscount = getTotal(goodsCalculated, discounted = false)
 
     println(totalWithDiscount)
     println(totalWithoutDiscount)

@@ -8,13 +8,16 @@ import scala.math.BigDecimal.RoundingMode
 
 object CalculateDiscountedGoods {
 
-  def getTotalWithoutDiscount(goods: List[Good]): BigDecimal =
-    BigDecimal(goods.map(d => d.price).sum)
+  def getTotal(goods: List[Good], discounted: Boolean): BigDecimal = {
+    BigDecimal(
+      goods
+        .map(d => {
+          if (discounted) d.discountedPrice
+          else d.price
+        })
+        .sum)
       .setScale(2, RoundingMode.HALF_EVEN)
-
-  def getTotalWithDiscount(goods: List[Good]): BigDecimal =
-    BigDecimal(goods.map(d => d.discountedPrice).sum)
-      .setScale(2, RoundingMode.HALF_EVEN)
+  }
 
   def discountsGenerate(discountsFiltered: List[Discount],
                         countOfItems: Map[String, Int]): List[Discount] =
@@ -38,9 +41,9 @@ object CalculateDiscountedGoods {
       )
 
   def generateCorrectNumberOfDiscounts(
-    discounts: List[Discount],
-    mapOfPrices: Map[String, Double],
-    countOfItems: Map[String, Int]
+      discounts: List[Discount],
+      mapOfPrices: Map[String, Double],
+      countOfItems: Map[String, Int]
   ): List[Discount] = {
 
     val maxNumberToBeApplied: List[Discount] =
@@ -62,7 +65,7 @@ object CalculateDiscountedGoods {
                                conditionalDiscounts: List[ConditionalDiscount],
                                discounts: List[Discount]): List[Good] = {
 
-    println(s"Subtotal: £${getTotalWithoutDiscount(initialBasket)}")
+    println(s"Subtotal: £${getTotal(initialBasket, discounted = false)}")
 
     val allDiscounts = (discounts ::: convertConditionalDiscountsToDiscounts(
       initialBasket,

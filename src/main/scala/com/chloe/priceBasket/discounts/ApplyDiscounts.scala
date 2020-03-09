@@ -44,7 +44,7 @@ object ApplyDiscounts {
       .filter(m => m._2 > 0)
   }
 
-  def applyDiscountsAndCombineWithNonDiscounts(
+  def getBasketWithDiscountsApplied(
     basket: List[Good],
     discounts: List[Discount]
   ): List[Good] = {

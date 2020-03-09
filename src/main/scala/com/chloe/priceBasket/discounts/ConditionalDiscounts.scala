@@ -8,33 +8,44 @@ object ConditionalDiscounts {
   private def groupGoodsWithQuantity(goods: List[Good]): Map[String, Int] =
     goods.map(g => g.name).groupBy(identity).mapValues(_.size)
 
+  def filterDiscounts(numberOfGoodsRequired: Map[String, Int],
+                      numberOfGoodsInBasket: Map[String, Int]): Boolean = {
+    numberOfGoodsRequired
+      .filter(
+        requiredGood =>
+          requiredGood._2 <= numberOfGoodsInBasket
+            .filter(numberOfGood =>
+              numberOfGoodsRequired.contains(numberOfGood._1))
+            .getOrElse(requiredGood._1, 0)
+      )
+      .equals(numberOfGoodsRequired)
+  }
+
   /**
     * Checks whether a conditional discount is applicable
     * based on items in the basket, and if so converts to a
     * discount
     */
   def convertConditionalDiscountsToDiscounts(
-    goodsInBasket: List[Good],
-    discounts: List[ConditionalDiscount]
+      goodsInBasket: List[Good],
+      discounts: List[ConditionalDiscount]
   ): List[Discount] = {
 
-    val howManyOfEachGood =
+    val howManyOfEachGood: Map[String, Int] =
       groupGoodsWithQuantity(goodsInBasket)
 
     discounts
-      .filter { cd =>
+      .filter { conditionalDiscount =>
         {
-          val required =
-            cd.condition.goodsRequired.groupBy(identity).mapValues(_.size)
+          val numberOfGoodRequired: Map[String, Int] =
+            conditionalDiscount.condition.countValues
 
-          required
+          numberOfGoodRequired
             .filter(
-              req =>
-                req._2 <= howManyOfEachGood
-                  .filter(a => required.contains(a._1))
-                  .getOrElse(req._1, 0)
+              requiredGood =>
+                filterDiscounts(numberOfGoodRequired, numberOfGoodRequired)
             )
-            .equals(required)
+            .equals(numberOfGoodRequired)
         }
       }
       .map(d => {

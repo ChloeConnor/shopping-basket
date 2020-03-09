@@ -19,15 +19,6 @@ object CalculateDiscountedGoods {
       .setScale(2, RoundingMode.HALF_EVEN)
   }
 
-  def discountsGenerate(discountsFiltered: List[Discount],
-                        countOfItems: Map[String, Int]): List[Discount] =
-    for {
-      dis <- discountsFiltered
-      _ <- 0 until countOfItems(dis.item)
-    } yield {
-      Discount(dis.item, dis.discount, dis.numberOfTimesToApply)
-    }
-
   def getMaxNumberOfDiscounts(discounts: List[Discount],
                               countOfItems: Map[String, Int]): List[Discount] =
     discounts
@@ -46,11 +37,8 @@ object CalculateDiscountedGoods {
       countOfItems: Map[String, Int]
   ): List[Discount] = {
 
-    val maxNumberToBeApplied: List[Discount] =
-      getMaxNumberOfDiscounts(discounts, countOfItems)
-
     val allDiscounts = for {
-      dis <- maxNumberToBeApplied
+      dis <- getMaxNumberOfDiscounts(discounts, countOfItems)
       _ <- 0 until dis.numberOfTimesToApply
     } yield {
       Discount(dis.item, dis.discount, dis.numberOfTimesToApply)
@@ -72,7 +60,7 @@ object CalculateDiscountedGoods {
       conditionalDiscounts
     )) filter (d => initialBasket.map(g => g.name).contains(d.item))
 
-    applyDiscountsAndCombineWithNonDiscounts(
+    getBasketWithDiscountsApplied(
       initialBasket,
       generateCorrectNumberOfDiscounts(
         allDiscounts,

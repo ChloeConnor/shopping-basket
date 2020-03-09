@@ -3,6 +3,7 @@ package com.chloe.priceBasket.discounts
 import com.chloe.priceBasket.dataTypes.Discount.Discount
 import com.chloe.priceBasket.dataTypes.Good
 import scala.math.BigDecimal.RoundingMode
+import com.chloe.priceBasket.PriceBasket._
 
 object ApplyDiscounts {
 
@@ -31,19 +32,14 @@ object ApplyDiscounts {
   }
 
   def findNumberOfEachItemNotDiscounted(
-    basket: List[Good],
-    discountedGoods: List[Good]
+      basket: List[Good],
+      discountedGoods: List[Good]
   ): Map[String, Int] = {
-    //FIX ME: use function
-    def howMany(item: String) =
-      discountedGoods
-        .groupBy(g => g.name)
-        .mapValues(_.size)
-        .getOrElse(item, 0)
 
-    basket
-      .groupBy(g => g.name)
-      .mapValues(_.size)
+    def howMany(item: String) =
+      countItemsInBasket(discountedGoods).getOrElse(item, 0)
+
+    countItemsInBasket(basket)
       .flatMap(h => Map(h._1 -> (h._2 - howMany(h._1))))
       .filter(m => m._2 > 0)
   }

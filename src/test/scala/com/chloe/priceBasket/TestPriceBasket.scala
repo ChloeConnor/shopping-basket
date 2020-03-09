@@ -39,7 +39,7 @@ class TestPriceBasket extends FlatSpec {
     assert(totalWithDiscount == 3.00)
   }
 
-  "Total price" should "be calculated if conditional applied multiple times" in {
+  it should "be calculated if conditional applied multiple times" in {
     val pricesMap =
       Map("Soup" -> 1.0, "Bread" -> 0.8)
 
@@ -62,7 +62,7 @@ class TestPriceBasket extends FlatSpec {
     assert(totalWithDiscount == 4.80)
   }
 
-  "Total price" should "be calculated when multiple items with uncondiional discount" in {
+  it should "be calculated when multiple items with unconditional discount" in {
     val pricesMap =
       Map("Apples" -> 1.0, "Bread" -> 0.8)
 

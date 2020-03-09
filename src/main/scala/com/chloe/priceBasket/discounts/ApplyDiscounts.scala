@@ -7,17 +7,6 @@ import com.chloe.priceBasket.PriceBasket._
 
 object ApplyDiscounts {
 
-  def logDiscount(discount: Discount, oldPrice: Double): Unit = {
-    val savings = oldPrice - (oldPrice * (1 - discount.discount))
-
-    println(
-      discount.item + " " + (discount.discount * 100) + "% off: " + (BigDecimal(
-        savings
-      ) * 100)
-        .setScale(0, RoundingMode.HALF_EVEN) + "p"
-    )
-  }
-
   def applyAllDiscounts(basket: List[Good],
                         discounts: List[Discount]): List[Good] = {
     discounts

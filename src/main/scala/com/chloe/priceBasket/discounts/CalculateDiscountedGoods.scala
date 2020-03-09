@@ -5,6 +5,7 @@ import com.chloe.priceBasket.dataTypes.Good
 import com.chloe.priceBasket.discounts.ApplyDiscounts._
 import com.chloe.priceBasket.discounts.ConditionalDiscounts.convertConditionalDiscountsToDiscounts
 import scala.math.BigDecimal.RoundingMode
+import com.chloe.priceBasket.utils.Logging._
 
 object CalculateDiscountedGoods {
 
@@ -69,5 +70,4 @@ object CalculateDiscountedGoods {
       )
     )
   }
-
 }

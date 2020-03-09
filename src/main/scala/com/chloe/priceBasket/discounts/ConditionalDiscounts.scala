@@ -8,7 +8,7 @@ object ConditionalDiscounts {
   private def groupGoodsWithQuantity(goods: List[Good]): Map[String, Int] =
     goods.map(g => g.name).groupBy(identity).mapValues(_.size)
 
-  def filterDiscounts(numberOfGoodsRequired: Map[String, Int],
+  private def filterDiscounts(numberOfGoodsRequired: Map[String, Int],
                       numberOfGoodsInBasket: Map[String, Int]): Boolean = {
     numberOfGoodsRequired
       .filter(

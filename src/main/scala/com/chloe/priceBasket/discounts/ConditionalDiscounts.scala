@@ -31,7 +31,7 @@ object ConditionalDiscounts {
       discounts: List[ConditionalDiscount]
   ): List[Discount] = {
 
-    val howManyOfEachGood: Map[String, Int] =
+    val numberOfGoodsInBasket: Map[String, Int] =
       groupGoodsWithQuantity(goodsInBasket)
 
     discounts
@@ -40,19 +40,14 @@ object ConditionalDiscounts {
           val numberOfGoodRequired: Map[String, Int] =
             conditionalDiscount.condition.countValues
 
-          numberOfGoodRequired
-            .filter(
-              requiredGood =>
-                filterDiscounts(numberOfGoodRequired, numberOfGoodRequired)
-            )
-            .equals(numberOfGoodRequired)
+          filterDiscounts(numberOfGoodRequired, numberOfGoodsInBasket)
         }
       }
       .map(d => {
         val numberRequired = d.condition.goodsRequired.size
-        val numberInBasket = howManyOfEachGood(d.condition.goodsRequired.head)
+        val numberInBasket =
+          numberOfGoodsInBasket(d.condition.goodsRequired.head)
         Discount(d.item, d.discount, numberInBasket / numberRequired)
       })
-
   }
 }

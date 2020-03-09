@@ -40,7 +40,7 @@ object ConditionalDiscounts {
       .map(d => {
         val numberRequired = d.condition.goodsRequired.size
         val numberInBasket = howManyOfEachGood(d.condition.goodsRequired.head)
-        Discount(d.item, d.discount, Some(numberInBasket / numberRequired))
+        Discount(d.item, d.discount, numberInBasket / numberRequired)
       })
 
   }

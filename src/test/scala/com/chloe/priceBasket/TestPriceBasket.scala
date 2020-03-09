@@ -10,6 +10,7 @@ import com.chloe.priceBasket.discounts.CalculateDiscountedGoods.{
   getTotalWithDiscount,
   getTotalWithoutDiscount
 }
+import com.chloe.priceBasket.PriceBasket._
 import org.scalatest.FlatSpec
 
 class TestPriceBasket extends FlatSpec {
@@ -21,12 +22,12 @@ class TestPriceBasket extends FlatSpec {
     val twoSoupDiscountBread: ConditionalDiscount =
       ConditionalDiscount("Bread", 0.5, Condition(List("Soup", "Soup")))
 
-    val discountOnApples: Discount = Discount("Apples", 0.1)
-
     val basket = List("Apples", "Milk", "Bread")
 
+    val discountOnApples: Discount = Discount("Apples", 0.1, 1)
+
     val goodsCalculated = calculateDiscountedGoods(
-      basket,
+      createBasket(basket, pricesMap),
       pricesMap,
       List(twoSoupDiscountBread),
       List(discountOnApples)
@@ -49,7 +50,7 @@ class TestPriceBasket extends FlatSpec {
     val basket = List("Soup", "Soup", "Bread", "Soup", "Soup", "Bread")
 
     val goodsCalculated = calculateDiscountedGoods(
-      basket,
+      createBasket(basket, pricesMap),
       pricesMap,
       List(twoSoupDiscountBread),
       List.empty
@@ -58,10 +59,7 @@ class TestPriceBasket extends FlatSpec {
     val totalWithDiscount = getTotalWithDiscount(goodsCalculated)
     val totalWithoutDiscount = getTotalWithoutDiscount(goodsCalculated)
 
-    println(totalWithDiscount)
-    println(totalWithoutDiscount)
-
-    assert(totalWithoutDiscount == 3.80)
+    assert(totalWithoutDiscount == 5.60)
     assert(totalWithDiscount == 4.80)
   }
 
@@ -71,10 +69,10 @@ class TestPriceBasket extends FlatSpec {
 
     val basket = List("Apples", "Apples", "Apples", "Bread")
 
-    val discounts: List[Discount] = List(Discount("Apples", 0.1))
+    val discounts: List[Discount] = List(Discount("Apples", 0.1, 3))
 
     val goodsCalculated =
-      calculateDiscountedGoods(basket, pricesMap, List.empty, discounts)
+      calculateDiscountedGoods(createBasket(basket, pricesMap), pricesMap, List.empty, discounts)
 
     val totalWithDiscount = getTotalWithDiscount(goodsCalculated)
     val totalWithoutDiscount = getTotalWithoutDiscount(goodsCalculated)

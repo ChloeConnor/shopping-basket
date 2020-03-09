@@ -23,7 +23,7 @@ object ReadFile {
       .reduce(_ ++ _)
   }
 
-  def readCSVToDiscount(path: String): List[Discount] = {
+  def readCSVToDiscount(path: String, countOfItems: Map[String, Int]): List[Discount] = {
     val file =
       Source
         .fromFile(path)
@@ -31,7 +31,7 @@ object ReadFile {
     file.getLines
       .map(line => {
         val cols: Array[String] = line.split(",").map(_.trim)
-        Discount(cols(0), cols(1).toDouble)
+        Discount(cols(0), cols(1).toDouble, countOfItems(cols(0)))
       })
       .toList
   }

@@ -185,6 +185,6 @@ class TestDiscount extends FlatSpec {
         conditionalDiscounts
       )
 
-    assert(allDiscounts.head.numberOfTimesToApply.get == 3)
+    assert(allDiscounts.head.numberOfTimesToApply == 3)
   }
 }

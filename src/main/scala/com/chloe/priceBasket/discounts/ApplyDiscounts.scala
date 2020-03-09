@@ -34,6 +34,7 @@ object ApplyDiscounts {
     basket: List[Good],
     discountedGoods: List[Good]
   ): Map[String, Int] = {
+    //FIX ME: use function
     def howMany(item: String) =
       discountedGoods
         .groupBy(g => g.name)

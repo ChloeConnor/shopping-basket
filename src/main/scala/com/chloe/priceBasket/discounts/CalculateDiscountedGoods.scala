@@ -26,51 +26,37 @@ object CalculateDiscountedGoods {
     }
 
   def generateCorrectNumberOfDiscounts(
-    discounts: List[Discount],
-    mapOfPrices: Map[String, Double],
-    countOfItems: Map[String, Int]
+      discounts: List[Discount],
+      mapOfPrices: Map[String, Double],
+      countOfItems: Map[String, Int]
   ): List[Discount] = {
 
-    val discountsApplyAsManyTimes = for {
-      dis <- discounts.filter(dis => dis.numberOfTimesToApply.isEmpty)
-      _ <- 0 until countOfItems(dis.item)
-    } yield {
-      Discount(dis.item, dis.discount, dis.numberOfTimesToApply)
-    }
-
     val maxNumberToBeApplied: List[Discount] = discounts
-      .filter(dis => dis.numberOfTimesToApply.isDefined)
       .map(
-        m =>
-          if (m.numberOfTimesToApply.getOrElse(0) > countOfItems(m.item)) {
-            m.copy(numberOfTimesToApply = Some(countOfItems(m.item)))
+        discount =>
+          if (discount.numberOfTimesToApply > countOfItems(discount.item)) {
+            discount.copy(
+              numberOfTimesToApply = countOfItems(discount.item))
           } else {
-            m
+            discount
         }
       )
 
-    val discountsApplySetNumberOfTimes = for {
-      dis <- maxNumberToBeApplied.filter(
-        dis => dis.numberOfTimesToApply.isDefined
-      )
-      _ <- 0 until dis.numberOfTimesToApply.getOrElse(0)
+    val allDiscounts = for {
+      dis <- maxNumberToBeApplied
+      _ <- 0 until dis.numberOfTimesToApply
     } yield {
       Discount(dis.item, dis.discount, dis.numberOfTimesToApply)
     }
-
-    val allDiscounts = discountsApplyAsManyTimes ::: discountsApplySetNumberOfTimes
     allDiscounts.foreach(dis => logDiscount(dis, mapOfPrices(dis.item)))
 
     allDiscounts
   }
 
-  def calculateDiscountedGoods(items: List[String],
+  def calculateDiscountedGoods(initialBasket: List[Good],
                                pricesMap: Map[String, Double],
                                conditionalDiscounts: List[ConditionalDiscount],
                                discounts: List[Discount]): List[Good] = {
-
-    val initialBasket: List[Good] =
-      items.map(item => Good(item, pricesMap(item), pricesMap(item)))
 
     println(s"Subtotal: £${getTotalWithoutDiscount(initialBasket)}")
 

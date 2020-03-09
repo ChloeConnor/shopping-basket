@@ -2,7 +2,7 @@ package com.chloe.priceBasket.dataTypes
 
 object Discount {
 
-  trait DiscountGeneric {
+  abstract class DiscountGeneric {
     val item: String
     val discount: Double
   }

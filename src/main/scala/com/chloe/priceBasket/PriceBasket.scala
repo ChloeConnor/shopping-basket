@@ -35,8 +35,8 @@ object PriceBasket extends App {
       discounts
     )
 
-    logNoOffers(basketCalculated)
+    outputNoOffers(basketCalculated)
 
-    println(s"Total price: £${getTotal(basketCalculated, discounted = true)}")
+    outputTotalBasketCost(basketCalculated, total = true)
   }
 }

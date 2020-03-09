@@ -3,21 +3,18 @@ package com.chloe.priceBasket.discounts
 import com.chloe.priceBasket.dataTypes.Discount.{ConditionalDiscount, Discount}
 import com.chloe.priceBasket.dataTypes.Good
 import com.chloe.priceBasket.discounts.ApplyDiscounts._
-import com.chloe.priceBasket.discounts.ConditionalDiscounts.convertConditionalDiscountsToDiscounts
-import scala.math.BigDecimal.RoundingMode
 import com.chloe.priceBasket.utils.Logging._
+import com.chloe.priceBasket.discounts.ConditionalDiscounts.processConditionalDiscounts
+import scala.math.BigDecimal.RoundingMode
 
 object CalculateDiscountedGoods {
 
   def getTotal(goods: List[Good], discounted: Boolean): BigDecimal = {
     BigDecimal(
       goods
-        .map(d => {
-          if (discounted) d.discountedPrice
-          else d.price
-        })
-        .sum)
-      .setScale(2, RoundingMode.HALF_EVEN)
+        .map(good => good.getCost(discounted))
+        .sum
+    ).setScale(2, RoundingMode.HALF_EVEN)
   }
 
   def getMaxNumberOfDiscounts(discounts: List[Discount],
@@ -33,9 +30,9 @@ object CalculateDiscountedGoods {
       )
 
   def generateCorrectNumberOfDiscounts(
-      discounts: List[Discount],
-      mapOfPrices: Map[String, Double],
-      countOfItems: Map[String, Int]
+    discounts: List[Discount],
+    mapOfPrices: Map[String, Double],
+    countOfItems: Map[String, Int]
   ): List[Discount] = {
 
     val allDiscounts = for {
@@ -44,7 +41,7 @@ object CalculateDiscountedGoods {
     } yield {
       Discount(dis.item, dis.discount, dis.numberOfTimesToApply)
     }
-    allDiscounts.foreach(dis => logDiscount(dis, mapOfPrices(dis.item)))
+    allDiscounts.foreach(dis => outputDiscount(dis, mapOfPrices(dis.item)))
 
     allDiscounts
   }
@@ -54,9 +51,9 @@ object CalculateDiscountedGoods {
                                conditionalDiscounts: List[ConditionalDiscount],
                                discounts: List[Discount]): List[Good] = {
 
-    println(s"Subtotal: £${getTotal(initialBasket, discounted = false)}")
+    outputTotalBasketCost(initialBasket, total = false)
 
-    val allDiscounts = (discounts ::: convertConditionalDiscountsToDiscounts(
+    val allDiscounts = (discounts ::: processConditionalDiscounts(
       initialBasket,
       conditionalDiscounts
     )) filter (d => initialBasket.map(g => g.name).contains(d.item))

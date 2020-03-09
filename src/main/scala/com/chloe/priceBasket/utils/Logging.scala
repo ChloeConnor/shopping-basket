@@ -7,13 +7,14 @@ import com.chloe.priceBasket.discounts.CalculateDiscountedGoods.getTotal
 import scala.math.BigDecimal.RoundingMode
 
 object Logging {
-  def logNoOffers(basket: List[Good]): Unit =
+
+  def outputNoOffers(basket: List[Good]): Unit =
     if (getTotal(basket, discounted = false) == getTotal(
           basket,
           discounted = true
         )) println("(No offers available)")
 
-  def logDiscount(discount: Discount, oldPrice: Double): Unit = {
+  def outputDiscount(discount: Discount, oldPrice: Double): Unit = {
     val savings = oldPrice - (oldPrice * (1 - discount.discount))
 
     println(
@@ -23,4 +24,8 @@ object Logging {
         .setScale(0, RoundingMode.HALF_EVEN) + "p"
     )
   }
+
+  def outputTotalBasketCost(basket: List[Good], total: Boolean): Unit =
+    if (total) println(s"Total price: £${getTotal(basket, discounted = true)}")
+    else println(s"Subtotal: £${getTotal(basket, discounted = false)}")
 }

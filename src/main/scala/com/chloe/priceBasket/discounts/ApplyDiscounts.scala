@@ -2,7 +2,6 @@ package com.chloe.priceBasket.discounts
 
 import com.chloe.priceBasket.dataTypes.Discount.Discount
 import com.chloe.priceBasket.dataTypes.Good
-import scala.math.BigDecimal.RoundingMode
 import com.chloe.priceBasket.PriceBasket._
 
 object ApplyDiscounts {
@@ -33,22 +32,22 @@ object ApplyDiscounts {
       .filter(m => m._2 > 0)
   }
 
-  def getBasketWithDiscountsApplied(
-    basket: List[Good],
-    discounts: List[Discount]
-  ): List[Good] = {
+  def getBasketWithDiscountsApplied(basket: List[Good],
+                                    discounts: List[Discount]): List[Good] = {
 
     val discountedGoods = applyAllDiscounts(basket, discounts)
-    println(discountedGoods)
 
     val itemsNotDiscounted: Map[String, Int] =
       findNumberOfEachItemNotDiscounted(basket, discountedGoods)
 
     val goodsWithoutDiscountsApplied = (for {
-      m <- itemsNotDiscounted
-      priceGood = basket.find(b => b.name == m._1).get.price
-      _ <- 0 until m._2
-    } yield Good(m._1, priceGood, priceGood)).toList
+      itemNotDiscounted <- itemsNotDiscounted
+      priceGood = basket
+        .find(item => item.name == itemNotDiscounted._1)
+        .get
+        .price
+      _ <- 0 until itemNotDiscounted._2
+    } yield Good(itemNotDiscounted._1, priceGood, priceGood)).toList
 
     discountedGoods ::: goodsWithoutDiscountsApplied
   }

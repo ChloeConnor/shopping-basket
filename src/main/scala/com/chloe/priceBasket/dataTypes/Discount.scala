@@ -16,6 +16,7 @@ object Discount {
       extends DiscountGeneric
 
   case class Condition(goodsRequired: List[String]) {
-    def countValues: Map[String, Int] = this.goodsRequired.groupBy(identity).mapValues(_.size)
+    def countValues: Map[String, Int] =
+      this.goodsRequired.groupBy(identity).mapValues(_.size)
   }
 }

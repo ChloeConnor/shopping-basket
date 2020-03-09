@@ -3,7 +3,7 @@ package com.chloe.priceBasket
 import com.chloe.priceBasket.dataTypes.Discount._
 import com.chloe.priceBasket.dataTypes.Good
 import com.chloe.priceBasket.discounts.ApplyDiscounts._
-import com.chloe.priceBasket.discounts.ConditionalDiscounts.convertConditionalDiscountsToDiscounts
+import com.chloe.priceBasket.discounts.ConditionalDiscounts.processConditionalDiscounts
 import org.scalatest.FlatSpec
 
 class TestDiscount extends FlatSpec {
@@ -27,10 +27,8 @@ class TestDiscount extends FlatSpec {
         ConditionalDiscount("Bread", 0.5, Condition(List("Apples", "Apples")))
       )
 
-    val allDiscounts = convertConditionalDiscountsToDiscounts(
-      goodsInBasket,
-      conditionalDiscounts
-    )
+    val allDiscounts =
+      processConditionalDiscounts(goodsInBasket, conditionalDiscounts)
     val actual =
       getBasketWithDiscountsApplied(goodsInBasket, allDiscounts)
 
@@ -62,10 +60,8 @@ class TestDiscount extends FlatSpec {
         ConditionalDiscount("pear", 0.2, Condition(List("banana")))
       )
 
-    val allDiscounts = convertConditionalDiscountsToDiscounts(
-      goodsInBasket,
-      conditionalDiscounts
-    )
+    val allDiscounts =
+      processConditionalDiscounts(goodsInBasket, conditionalDiscounts)
     val actual =
       getBasketWithDiscountsApplied(goodsInBasket, allDiscounts)
 
@@ -93,10 +89,7 @@ class TestDiscount extends FlatSpec {
       List(ConditionalDiscount("Bread", 0.5, Condition(List("Apples", "Soup"))))
 
     val allDiscounts: List[Discount] =
-      convertConditionalDiscountsToDiscounts(
-        goodsInBasket,
-        conditionalDiscounts
-      )
+      processConditionalDiscounts(goodsInBasket, conditionalDiscounts)
 
     val actual =
       getBasketWithDiscountsApplied(goodsInBasket, allDiscounts)
@@ -127,10 +120,7 @@ class TestDiscount extends FlatSpec {
       )
 
     val allDiscounts: List[Discount] =
-      convertConditionalDiscountsToDiscounts(
-        goodsInBasket,
-        conditionalDiscounts
-      )
+      processConditionalDiscounts(goodsInBasket, conditionalDiscounts)
 
     val applyNew =
       getBasketWithDiscountsApplied(goodsInBasket, allDiscounts)
@@ -152,10 +142,7 @@ class TestDiscount extends FlatSpec {
       )
 
     val allDiscounts: List[Discount] =
-      convertConditionalDiscountsToDiscounts(
-        goodsInBasket,
-        conditionalDiscounts
-      )
+      processConditionalDiscounts(goodsInBasket, conditionalDiscounts)
 
     val applyNew =
       getBasketWithDiscountsApplied(goodsInBasket, allDiscounts)
@@ -182,10 +169,7 @@ class TestDiscount extends FlatSpec {
       List(ConditionalDiscount("Bread", 0.5, Condition(List("Soup", "Soup"))))
 
     val allDiscounts: List[Discount] =
-      convertConditionalDiscountsToDiscounts(
-        goodsInBasket,
-        conditionalDiscounts
-      )
+      processConditionalDiscounts(goodsInBasket, conditionalDiscounts)
 
     assert(allDiscounts.head.numberOfTimesToApply == 3)
   }

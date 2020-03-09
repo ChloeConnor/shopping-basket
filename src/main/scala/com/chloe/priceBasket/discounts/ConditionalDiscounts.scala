@@ -1,12 +1,9 @@
 package com.chloe.priceBasket.discounts
 
 import com.chloe.priceBasket.dataTypes.Discount.{ConditionalDiscount, Discount}
-import com.chloe.priceBasket.dataTypes.Good
+import com.chloe.priceBasket.dataTypes.{Basket, Good}
 
 object ConditionalDiscounts {
-
-  private def groupGoodsWithQuantity(goods: List[Good]): Map[String, Int] =
-    goods.map(g => g.name).groupBy(identity).mapValues(_.size)
 
   private def filterDiscounts(
     numberOfGoodsRequired: Map[String, Int],
@@ -30,27 +27,22 @@ object ConditionalDiscounts {
     * discount
     */
   def processConditionalDiscounts(
-    goodsInBasket: List[Good],
+    basket: Basket,
     discounts: List[ConditionalDiscount]
-  ): List[Discount] = {
-
-    val numberOfGoodsInBasket: Map[String, Int] =
-      groupGoodsWithQuantity(goodsInBasket)
-
+  ): List[Discount] =
     discounts
       .filter { conditionalDiscount =>
         {
           val numberOfGoodRequired: Map[String, Int] =
             conditionalDiscount.condition.countValues
 
-          filterDiscounts(numberOfGoodRequired, numberOfGoodsInBasket)
+          filterDiscounts(numberOfGoodRequired, basket.countQuantityOfEach)
         }
       }
       .map(d => {
         val numberRequired = d.condition.goodsRequired.size
         val numberInBasket =
-          numberOfGoodsInBasket(d.condition.goodsRequired.head)
+          basket.countQuantityOfEach(d.condition.goodsRequired.head)
         Discount(d.item, d.discount, numberInBasket / numberRequired)
       })
-  }
 }

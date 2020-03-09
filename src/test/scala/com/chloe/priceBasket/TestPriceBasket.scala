@@ -1,15 +1,8 @@
 package com.chloe.priceBasket
 
-import com.chloe.priceBasket.dataTypes.Discount.{
-  Condition,
-  ConditionalDiscount,
-  Discount
-}
-import com.chloe.priceBasket.discounts.CalculateDiscountedGoods.{
-  calculateDiscountedGoods,
-  getTotal
-}
-import com.chloe.priceBasket.PriceBasket._
+import com.chloe.priceBasket.dataTypes.Basket
+import com.chloe.priceBasket.dataTypes.Discount.{Condition, ConditionalDiscount, Discount}
+import com.chloe.priceBasket.discounts.CalculateDiscountedGoods.{calculateDiscountedGoods, getTotal}
 import org.scalatest.FlatSpec
 
 class TestPriceBasket extends FlatSpec {
@@ -26,7 +19,7 @@ class TestPriceBasket extends FlatSpec {
     val discountOnApples: Discount = Discount("Apples", 0.1, 1)
 
     val goodsCalculated = calculateDiscountedGoods(
-      createBasket(basket, pricesMap),
+      Basket.apply(basket,pricesMap),
       pricesMap,
       List(twoSoupDiscountBread),
       List(discountOnApples)
@@ -49,7 +42,7 @@ class TestPriceBasket extends FlatSpec {
     val basket = List("Soup", "Soup", "Bread", "Soup", "Soup", "Bread")
 
     val goodsCalculated = calculateDiscountedGoods(
-      createBasket(basket, pricesMap),
+      Basket.apply(basket, pricesMap),
       pricesMap,
       List(twoSoupDiscountBread),
       List.empty
@@ -72,7 +65,7 @@ class TestPriceBasket extends FlatSpec {
 
     val goodsCalculated =
       calculateDiscountedGoods(
-        createBasket(basket, pricesMap),
+        Basket.apply(basket, pricesMap),
         pricesMap,
         List.empty,
         discounts
@@ -102,7 +95,7 @@ class TestPriceBasket extends FlatSpec {
 
     val goodsCalculated =
       calculateDiscountedGoods(
-        createBasket(basket, pricesMap),
+        Basket.apply(basket, pricesMap),
         pricesMap,
         List(twoSoupDiscountBread),
         discounts
@@ -115,7 +108,7 @@ class TestPriceBasket extends FlatSpec {
     println(totalWithoutDiscount)
 
     assert(totalWithoutDiscount == 5.00)
-    assert(totalWithDiscount == 4 .30)
+    assert(totalWithDiscount == 4.30)
   }
 
 }

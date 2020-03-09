@@ -1,17 +1,18 @@
 package com.chloe.priceBasket.discounts
 
 import com.chloe.priceBasket.dataTypes.Discount.{ConditionalDiscount, Discount}
-import com.chloe.priceBasket.dataTypes.Good
+import com.chloe.priceBasket.dataTypes.{Basket, Good}
 import com.chloe.priceBasket.discounts.ApplyDiscounts._
 import com.chloe.priceBasket.utils.Logging._
 import com.chloe.priceBasket.discounts.ConditionalDiscounts.processConditionalDiscounts
+
 import scala.math.BigDecimal.RoundingMode
 
 object CalculateDiscountedGoods {
 
-  def getTotal(goods: List[Good], discounted: Boolean): BigDecimal = {
+  def getTotal(basket: Basket, discounted: Boolean): BigDecimal = {
     BigDecimal(
-      goods
+      basket.goods
         .map(good => good.getCost(discounted))
         .sum
     ).setScale(2, RoundingMode.HALF_EVEN)
@@ -46,24 +47,24 @@ object CalculateDiscountedGoods {
     allDiscounts
   }
 
-  def calculateDiscountedGoods(initialBasket: List[Good],
+  def calculateDiscountedGoods(initialBasket: Basket,
                                pricesMap: Map[String, Double],
                                conditionalDiscounts: List[ConditionalDiscount],
-                               discounts: List[Discount]): List[Good] = {
+                               discounts: List[Discount]): Basket = {
 
     outputTotalBasketCost(initialBasket, total = false)
 
     val allDiscounts = (discounts ::: processConditionalDiscounts(
       initialBasket,
       conditionalDiscounts
-    )) filter (d => initialBasket.map(g => g.name).contains(d.item))
+    )) filter (d => initialBasket.goods.map(g => g.name).contains(d.item))
 
     getBasketWithDiscountsApplied(
       initialBasket,
       generateCorrectNumberOfDiscounts(
         allDiscounts,
         pricesMap,
-        initialBasket.map(g => g.name).groupBy(identity).mapValues(_.size)
+        initialBasket.goods.map(g => g.name).groupBy(identity).mapValues(_.size)
       )
     )
   }

@@ -6,3 +6,21 @@ case class Good(name: String, price: Double, discountedPrice: Double) {
     if (discounted) this.discountedPrice
     else this.price
 }
+
+case class Basket(goods: List[Good]) {
+
+  def countQuantityOfEach: Map[String, Int] =
+    goods.map(g => g.name).groupBy(identity).mapValues(_.size)
+
+  def add(basket: Basket): Basket = Basket(this.goods ::: basket.goods)
+
+  def equals(basket: Basket): Boolean = {
+    this.goods.toSet == basket.goods.toSet && this.goods.size == basket.goods.size
+  }
+}
+
+object Basket {
+
+  def apply(items: List[String], pricesMap: Map[String, Double]): Basket =
+    Basket(items.map(item => Good(item, pricesMap(item), pricesMap(item))))
+}
